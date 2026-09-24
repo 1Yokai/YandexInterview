@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yandex Interview Trainer</title>
+<style>
+:root{--bg:#0f1115;--panel:#171a21;--bd:#2a2f3a;--text:#e6e8ee;--muted:#8b93a3;--acc:#7c8cff;--ok:#4cc27a;--warn:#e8b04a;--bad:#ff6b6b;--rev:#5cb6ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--bd)}
+h1{font-size:18px;margin:0}h2{font-size:20px;margin:6px 0}h3{font-size:12px;margin:14px 0 6px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.sub{color:var(--muted);font-size:12px}
+#stats{display:flex;gap:14px;align-items:center;font-size:13px;flex-wrap:wrap}
+.pb{width:140px;height:6px;background:var(--bd);border-radius:9px;overflow:hidden}.pb i{display:block;height:100%;background:var(--ok)}
+.app{display:grid;grid-template-columns:330px minmax(0,1fr) minmax(0,1.3fr);gap:12px;padding:12px;max-width:1700px;margin:0 auto;align-items:start}
+aside,.panel{background:var(--panel);border:1px solid var(--bd);border-radius:12px;padding:12px}
+aside{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
+button,.btn,select,input[type=text]{font:inherit;font-size:13px;color:var(--text);background:transparent;border:1px solid var(--bd);border-radius:8px;padding:5px 10px;cursor:pointer;text-decoration:none;display:inline-block}
+select{background:var(--panel)}
+button:hover,.btn:hover{border-color:var(--acc)}
+button.on{background:var(--acc);border-color:var(--acc);color:#0b0d12}
+button.primary{background:var(--acc);border-color:var(--acc);color:#0b0d12;font-weight:600}
+button:disabled{opacity:.5;cursor:wait}
+#q{width:100%;cursor:text;margin-bottom:8px}
+.chips,.row{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;align-items:center}
+.cnt{font-size:12px;color:var(--muted);margin:6px 0}
+details{margin-bottom:2px}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;padding:6px 4px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;position:sticky;top:-12px;background:var(--panel);z-index:1}
+summary::-webkit-details-marker{display:none}summary::before{content:"▸";margin-right:6px}details[open]>summary::before{content:"▾"}
+summary span:first-child{flex:1}
+.item{display:flex;gap:8px;align-items:center;padding:6px 8px;border-radius:8px;cursor:pointer;border:1px solid transparent;font-size:14px}
+.item:hover{background:#1e222b}.item.on{background:#1e222b;border-color:var(--acc)}
+.item .t{flex:1}.ic{width:16px;text-align:center}
+.s-new .ic{color:var(--muted)}.s-in_progress .ic{color:var(--warn)}.s-solved .ic{color:var(--ok)}.s-review .ic{color:var(--rev)}
+.b{font-size:11px;padding:1px 7px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.Easy{color:var(--ok)}.Medium{color:var(--warn)}.Hard{color:var(--bad)}
+.tag{font-size:12px;color:var(--muted);border:1px solid var(--bd);border-radius:99px;padding:1px 8px}.tag.ok{color:var(--ok)}
+.desc p{margin:0 0 10px}.desc code,.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#0d0f14;border-radius:5px}
+.desc code{padding:1px 5px}pre.code{padding:10px;overflow:auto;margin:6px 0;border:1px solid var(--bd)}
+.muted{color:var(--muted)}
+#editor{height:520px;border-radius:10px;border:1px solid var(--bd)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
+.r{padding:6px 10px;border-radius:8px;margin:4px 0;font-size:13px;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+.r.ok{background:rgba(76,194,122,.12);color:var(--ok)}.r.no{background:rgba(255,107,107,.12);color:var(--bad)}.r.wn{background:rgba(232,176,74,.12);color:var(--warn)}.r.in{background:#0d0f14;color:var(--muted)}
+.foot{display:flex;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid var(--bd);flex-wrap:wrap}
+@media(max-width:1200px){.app{grid-template-columns:330px minmax(0,1fr)}aside{grid-row:span 2}}
+@media(max-width:820px){.app{grid-template-columns:1fr}aside{position:static;max-height:55vh;grid-row:auto}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/ace-builds@1.32.9/src-min-noconflict/ace.js"></script>
+</head>
+<body>
+<header>
+<div><h1>Yandex Interview Trainer</h1><div class="sub">Python · алгоритмы · Medium-first · без подсказок · прогресс хранится в вашем браузере</div></div>
+<div id="stats"></div>
+</header>
+<div class="app">
+<aside>
+<input type="text" id="q" placeholder="Поиск: название или тема">
+<div class="chips" id="cd"><button class="on" data-d="Easy">Easy</button><button class="on" data-d="Medium">Medium</button><button class="on" data-d="Hard">Hard</button></div>
+<div class="chips" id="cs"><button class="on" data-s="all">Все</button><button data-s="unsolved">Нерешённые</button><button data-s="review">На повтор</button><button data-x="auto">С автотестами</button></div>
+<div class="cnt" id="cnt"></div>
+<div id="list"></div>
+<div class="foot"><button id="exp">Экспорт прогресса</button><label class="btn">Импорт<input type="file" id="imp" accept=".json" hidden></label></div>
+</aside>
+<section class="panel" id="info"></section>
+<section class="panel">
+<div id="editor"></div>
+<div class="bar">
+<button class="primary" id="run">▶ Запустить тесты</button>
+<button id="save">💾 Сохранить</button>
+<button id="solved">✓ Отметить решённой</button>
+<button id="reset">Сбросить код</button>
+<span class="sub" id="py">Python: загрузка…</span>
+</div>
+<div id="res"></div>
+<div class="sub">Ctrl/⌘+Enter — запуск · j / k — следующая / предыдущая задача (вне редактора)</div>
+</section>
+</div>
+<script>
+const RUNNER_PY=String.raw`import json, sys, io, traceback
+
+def run_tests(code, tests_json):
+    buf, old = io.StringIO(), sys.stdout
+    sys.stdout = buf
+    out = {"res": [], "fatal": ""}
+    try:
+        ns = {"__name__": "solution"}
+        exec("from typing import *\n", ns)
+        exec(compile(code, "solution.py", "exec"), ns)
+        solve = ns.get("solve")
+        if solve is None:
+            out["fatal"] = "Не найдена функция solve(...)"
+        else:
+            for i, item in enumerate(json.loads(tests_json), 1):
+                args, exp = item[:-1], item[-1]
+                r = {"i": i, "args": json.dumps(args, ensure_ascii=False, default=str)[1:-1],
+                     "expected": json.dumps(exp, ensure_ascii=False, default=str)}
+                try:
+                    got = solve(*args)
+                    try:
+                        g2 = json.loads(json.dumps(got))
+                    except Exception:
+                        g2 = got
+                    r["ok"] = (g2 == exp)
+                    r["got"] = json.dumps(g2, ensure_ascii=False, default=str)
+                except Exception as e:
+                    r["ok"] = False
+                    r["error"] = repr(e)
+                out["res"].append(r)
+    except BaseException as e:
+        tb = e.__traceback__.tb_next if e.__traceback__ else None
+        out["fatal"] = "".join(traceback.format_exception(type(e), e, tb))
+    finally:
+        sys.stdout = old
+    out["out"] = buf.getvalue()[:5000]
+    return json.dumps(out, ensure_ascii=False)
+`;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+const ST={new:['○','Новая'],in_progress:['◐','В процессе'],solved:['●','Решена'],review:['↻','На повтор']};
+const RANK={Easy:0,Medium:1,Hard:2};
+let TASKS=[],TESTS={},P={},cur=null,ed=null,loading=false,pend=null,seq=0,W=null,ready=null;
+const F={q:'',d:new Set(['Easy','Medium','Hard']),s:'all',auto:false},OPEN=new Set();
+
+/* ---------- Python worker (Pyodide) ---------- */
+function workerMain(){
+ let py;
+ onmessage=async e=>{
+  const d=e.data;
+  if(d.init){
+   try{
+    importScripts('https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js');
+    py=await loadPyodide({indexURL:'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/'});
+    py.runPython(d.init);postMessage({ready:1});
+   }catch(err){postMessage({initError:String(err)})}
+  }else if(d.run){
+   try{postMessage({id:d.id,out:py.globals.get('run_tests')(d.run.code,d.run.tests)})}
+   catch(err){postMessage({id:d.id,err:String(err)})}
+  }
+ };
+}
+function spawn(){
+ $('py').textContent='Python: загрузка…';
+ W=new Worker(URL.createObjectURL(new Blob(['('+workerMain.toString()+')()'],{type:'text/javascript'})));
+ ready=new Promise((res,rej)=>{W.onmessage=e=>{if(e.data.ready){$('py').textContent='Python: готов';res()}else if(e.data.initError){$('py').textContent='Python: ошибка загрузки';rej(new Error(e.data.initError))}}});
+ ready.catch(()=>{});
+ W.postMessage({init:RUNNER_PY});
+}
+function exec(code,tests){
+ return new Promise(async(resolve,reject)=>{
+  try{await ready}catch(e){reject(e);return}
+  const id=++seq,w=W;
+  const tm=setTimeout(()=>{w.terminate();spawn();resolve({timeout:1})},4000);
+  w.onmessage=e=>{if(e.data.id===id){clearTimeout(tm);resolve(e.data)}};
+  w.postMessage({id,run:{code,tests:JSON.stringify(tests)}});
+ });
+}
+
+/* ---------- progress ---------- */
+const saveP=()=>LS.set('yit-progress',JSON.stringify(P));
+function upd(id,patch){
+ const b=P[id]||{},nb={status:'new',attempts:0,passed:0,last_run:null,code:'',...b,...patch};
+ const changed=nb.status!==(b.status||'new')||nb.attempts!==(b.attempts||0)||nb.passed!==(b.passed||0);
+ P[id]=nb;saveP();renderStats();
+ if(changed){renderList();if(cur&&cur.id===id)renderMeta()}
+}
+function flush(){if(pend){clearTimeout(pend.tm);const p=P[pend.id]||{};upd(pend.id,{code:pend.code,status:(p.status||'new')==='new'?'in_progress':p.status});pend=null}}
+const starter=t=>{const m=(t.contract||'').match(/^def solve\([^\n]*:\s*$/m);return (m?m[0].trim():'def solve(...):')+'\n    pass\n'};
+
+/* ---------- rendering ---------- */
+function md(s){
+ return String(s).split('```').map((p,i)=>i%2?`<pre class="code">${esc(p.replace(/^[\w+-]*\n/,''))}</pre>`:
+  esc(p).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').split(/\n{2,}/).filter(b=>b.trim()).map(b=>`<p>${b.replace(/\n/g,'<br>')}</p>`).join('')).join('');
+}
+function renderStats(){
+ const s=t=>(P[t.id]||{}).status,N=TASKS.length,sv=TASKS.filter(t=>s(t)==='solved').length;
+ const med=TASKS.filter(t=>t.difficulty==='Medium'),ms=med.filter(t=>s(t)==='solved').length,tr=TASKS.filter(t=>(P[t.id]||{}).attempts>0).length;
+ $('stats').innerHTML=`<b>Решено ${sv}/${N}</b><div class="pb"><i style="width:${sv/Math.max(1,N)*100}%"></i></div><span>Medium: <b>${ms}/${med.length}</b></span><span>Попробовано: <b>${tr}</b></span>`;
+}
+function view(){
+ return TASKS.filter(t=>{
+  const s=(P[t.id]||{}).status||'new';
+  if(!F.d.has(t.difficulty))return false;
+  if(F.s==='unsolved'&&s==='solved')return false;
+  if(F.s==='review'&&s!=='review')return false;
+  if(F.auto&&!t.auto_tests)return false;
+  return !F.q||(t.title+' '+t.topic).toLowerCase().includes(F.q);
+ });
+}
+function groups(v){
+ const m=new Map();TASKS.forEach(t=>{if(!m.has(t.topic))m.set(t.topic,[])});
+ v.forEach(t=>m.get(t.topic).push(t));
+ return [...m].filter(([,a])=>a.length).map(([k,a])=>[k,a.slice().sort((x,y)=>RANK[x.difficulty]-RANK[y.difficulty])]);
+}
+let flat=[];
+function renderList(){
+ const v=view(),g=groups(v),search=F.q||F.s!=='all'||F.auto;
+ flat=g.flatMap(([,a])=>a);
+ $('cnt').textContent=`Найдено: ${v.length} из ${TASKS.length}`;
+ $('list').innerHTML=g.map(([k,a])=>{
+  const sv=a.filter(t=>(P[t.id]||{}).status==='solved').length;
+  const open=search||OPEN.has(k)||(cur&&cur.topic===k);
+  return `<details data-k="${esc(k)}" ${open?'open':''}><summary><span>${esc(k)}</span><span>${sv}/${a.length}</span></summary>`+
+   a.map(t=>{const s=(P[t.id]||{}).status||'new';
+    return `<div class="item s-${s} ${cur&&cur.id===t.id?'on':''}" data-id="${t.id}" title="${ST[s][1]}"><span class="ic">${ST[s][0]}</span><span class="t">${esc(t.title)}</span><span class="b ${t.difficulty}">${t.difficulty}</span></div>`}).join('')+`</details>`;
+ }).join('')||'<div class="muted">По фильтрам ничего нет.</div>';
+ $('list').querySelectorAll('details').forEach(d=>d.addEventListener('toggle',()=>{d.open?OPEN.add(d.dataset.k):OPEN.delete(d.dataset.k)}));
+}
+function renderMeta(){
+ const t=cur,p=P[t.id]||{},s=p.status||'new';
+ $('info').innerHTML=`<div class="row"><button data-a="prev">← Пред.</button><button data-a="next">След. →</button><button data-a="rnd">🎲 Случайная нерешённая</button></div>
+ <h2>${esc(t.title)}</h2>
+ <div class="row"><span class="b ${t.difficulty}">${t.difficulty}</span><span class="tag">${esc(t.topic)}</span>${t.source?`<span class="tag">${esc(t.source)}</span>`:''}${t.auto_tests?'<span class="tag ok">автотесты</span>':''}</div>
+ <div class="row">${t.url?`<a class="btn" href="${esc(t.url)}" target="_blank" rel="noopener">Открыть оригинал ↗</a>`:''}<select id="sel">${Object.entries(ST).map(([k,v])=>`<option value="${k}" ${k===s?'selected':''}>${v[0]} ${v[1]}</option>`).join('')}</select></div>
+ <h3>Условие</h3>
+ <div class="desc">${t.description?md(t.description):'<p class="muted">Описание для этой задачи пока не добавлено — добавьте поле <code>description</code> в tasks.json. Полное условие — по кнопке «Открыть оригинал».</p>'}</div>
+ ${t.contract?`<h3>Контракт</h3><pre class="code">${esc(t.contract)}</pre><div class="sub">Реализуйте функцию <code>solve(...)</code>.</div>`:''}
+ <div class="sub" style="margin-top:10px">Попыток: ${p.attempts||0} · успешных прогонов: ${p.passed||0}</div>`;
+}
+function select(id){
+ flush();
+ cur=TASKS.find(t=>t.id===id)||TASKS[0];
+ LS.set('yit-cur',cur.id);history.replaceState(null,'','#'+cur.id);
+ renderMeta();loadCode();$('res').innerHTML='';renderList();
+ const a=document.querySelector('.item.on');if(a)a.scrollIntoView({block:'nearest'});
+}
+function loadCode(){loading=true;ed.setValue((P[cur.id]||{}).code||starter(cur),-1);ed.session.getUndoManager().reset();loading=false}
+function go(d){
+ if(!flat.length)return;
+ const i=flat.findIndex(t=>t.id===cur.id);
+ select(flat[(i+d+flat.length)%flat.length].id);
+}
+function rnd(){
+ const c=flat.filter(t=>t.id!==cur.id&&(P[t.id]||{}).status!=='solved');
+ if(c.length)select(c[Math.floor(Math.random()*c.length)].id);
+}
+
+/* ---------- run ---------- */
+const box=h=>{$('res').innerHTML=h};
+async function run(){
+ flush();
+ const t=cur,code=ed.getValue(),p=P[t.id]||{},spec=TESTS[t.title];
+ upd(t.id,{code,attempts:(p.attempts||0)+1,status:(p.status||'new')==='new'?'in_progress':p.status,last_run:Date.now()/1000});
+ if(!t.auto_tests||!spec){box('<div class="r wn">Для этой задачи автотесты пока не заведены. Используйте оригинальный judge или добавьте тесты в tests.json.</div>');return}
+ $('run').disabled=true;box('<div class="r in">Выполняется…</div>');
+ try{
+  const r=await exec(code,spec.tests);
+  if(r.timeout){box('<div class="r no">Превышен лимит 4 секунды.</div>');return}
+  if(r.err){box(`<div class="r no">${esc(r.err)}</div>`);return}
+  const o=JSON.parse(r.out);let h='';
+  if(o.fatal)h+=`<div class="r no">${esc(o.fatal)}</div>`;
+  let ok=0;
+  o.res.forEach(x=>{
+   if(x.ok){ok++;h+=`<div class="r ok">Тест ${x.i}: OK</div>`}
+   else h+=`<div class="r no">Тест ${x.i}: ${x.error?esc(x.error):`ожидалось ${esc(x.expected)}, получено ${esc(x.got)}`}\nвход: ${esc(x.args)}</div>`;
+  });
+  if(o.out)h+=`<div class="r in">Вывод:\n${esc(o.out)}</div>`;
+  if(!o.fatal){
+   const all=ok===o.res.length&&o.res.length>0;
+   h=`<div class="r ${all?'ok':'wn'}"><b>${all?'Все тесты пройдены — задача отмечена решённой.':`Пройдено: ${ok}/${o.res.length}`}</b></div>`+h;
+   if(all)upd(t.id,{status:'solved',passed:(P[t.id].passed||0)+1});
+  }
+  box(h);
+ }catch(e){box(`<div class="r no">Не удалось запустить Python: ${esc(e.message)}. Проверьте соединение и обновите страницу.</div>`)}
+ finally{$('run').disabled=false}
+}
+
+/* ---------- boot ---------- */
+async function boot(){
+ try{
+  const [a,b]=await Promise.all([fetch('tasks.json').then(r=>r.json()),fetch('tests.json').then(r=>r.json())]);
+  TASKS=a.tasks;TESTS=b;
+ }catch(e){$('info').innerHTML='<div class="r no">Не удалось загрузить tasks.json / tests.json. Локально откройте сайт через <code>python -m http.server</code>, а не как файл.</div>';return}
+ try{P=JSON.parse(LS.get('yit-progress')||'{}')}catch(e){P={}}
+ ed=ace.edit('editor',{mode:'ace/mode/python',theme:'ace/theme/tomorrow_night',tabSize:4,useSoftTabs:true,showPrintMargin:false,fontSize:15,wrap:true,enableBasicAutocompletion:false,enableLiveAutocompletion:false,enableSnippets:false,showGutter:true});
+ ed.commands.addCommand({name:'run',bindKey:{win:'Ctrl-Enter',mac:'Command-Enter'},exec:run});
+ ed.session.on('change',()=>{
+  if(loading)return;
+  if(pend)clearTimeout(pend.tm);
+  const id=cur.id,code=ed.getValue();
+  pend={id,code,tm:setTimeout(flush,600)};
+ });
+ spawn();
+ const h=parseInt(location.hash.slice(1)),saved=parseInt(LS.get('yit-cur'));
+ renderStats();renderList();
+ select([h,saved].find(x=>TASKS.some(t=>t.id===x))??TASKS[0].id);
+}
+$('q').oninput=e=>{F.q=e.target.value.toLowerCase().trim();renderList()};
+$('cd').onclick=e=>{const d=e.target.dataset.d;if(!d)return;F.d.has(d)?F.d.delete(d):F.d.add(d);e.target.classList.toggle('on');renderList()};
+$('cs').onclick=e=>{
+ const s=e.target.dataset.s;
+ if(s){F.s=s;$('cs').querySelectorAll('[data-s]').forEach(b=>b.classList.toggle('on',b.dataset.s===s))}
+ else if(e.target.dataset.x){F.auto=!F.auto;e.target.classList.toggle('on',F.auto)}else return;
+ renderList();
+};
+$('list').onclick=e=>{const it=e.target.closest('.item');if(it)select(+it.dataset.id)};
+$('info').onclick=e=>{const a=e.target.dataset.a;if(a==='prev')go(-1);else if(a==='next')go(1);else if(a==='rnd')rnd()};
+$('info').onchange=e=>{if(e.target.id==='sel')upd(cur.id,{status:e.target.value})};
+$('run').onclick=run;
+$('save').onclick=()=>{flush();const p=P[cur.id]||{};upd(cur.id,{code:ed.getValue(),status:(p.status||'new')==='new'?'in_progress':p.status});box('<div class="r ok">Сохранено.</div>')};
+$('solved').onclick=()=>{upd(cur.id,{code:ed.getValue(),status:'solved'});box('<div class="r ok">Задача отмечена как решённая.</div>')};
+$('reset').onclick=()=>{if(confirm('Сбросить код этой задачи к шаблону?')){pend=null;upd(cur.id,{code:''});loadCode()}};
+$('exp').onclick=()=>{flush();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(P,null,1)],{type:'application/json'}));a.download='progress.json';a.click()};
+$('imp').onchange=async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{const o=JSON.parse(await f.text());for(const k in o)P[k]={status:'new',attempts:0,passed:0,last_run:null,code:'',...o[k]};saveP();renderStats();renderList();renderMeta();loadCode();box('<div class="r ok">Прогресс импортирован.</div>')}
+ catch(err){box('<div class="r no">Не удалось прочитать файл прогресса.</div>')}
+ e.target.value='';
+};
+window.addEventListener('hashchange',()=>{const id=parseInt(location.hash.slice(1));if(cur&&id!==cur.id&&TASKS.some(t=>t.id===id))select(id)});
+document.addEventListener('keydown',e=>{
+ if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;
+ if(e.key==='j')go(1);else if(e.key==='k')go(-1);
+});
+window.addEventListener('beforeunload',flush);
+boot();
+</script>
+</body>
+</html>

@@ -52,6 +52,21 @@ pre.code{padding:10px;overflow:auto;margin:6px 0;border:1px solid var(--bd)}.mut
 .bar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
 .r{padding:6px 10px;border-radius:8px;margin:4px 0;font-size:13px;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
 .r.ok{background:rgba(74,222,128,.1);color:var(--ok)}.r.no{background:rgba(248,113,113,.1);color:var(--bad)}.r.wn{background:rgba(251,191,36,.1);color:var(--warn)}.r.in{background:#0a0a0b;color:var(--muted)}
+/* NEW: details blocks */
+.examples{margin:6px 0 10px}
+.example{background:#0a0a0b;border:1px solid var(--bd);border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px}
+.example .ex-row{margin:2px 0;font-family:ui-monospace,Menlo,Consolas,monospace}
+.example .ex-row b{color:var(--muted);font-family:inherit;font-weight:600;margin-right:6px}
+.example .ex-row code{background:#17171a;padding:1px 5px;border-radius:4px;color:var(--text)}
+.example .ex-exp{color:var(--muted);font-family:inherit;margin-top:4px}
+.idea{margin-top:6px}
+.idea>summary{cursor:pointer;color:var(--acc);font-size:13px;user-select:none}
+.idea>summary:hover{text-decoration:underline}
+.idea p{margin:6px 0 0;color:var(--text)}
+.det-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.det-tags .tag{font-size:11px;background:#17171a;border-color:#2a2a30}
+.io-block{margin:6px 0;font-size:13px;color:var(--text)}
+.io-block b{color:var(--muted);font-weight:600;margin-right:4px}
 @media(max-width:900px){.split{grid-template-columns:1fr;padding:12px}#tinfo{position:static;max-height:none}.dist{grid-template-columns:1fr}.c-tp{display:none}.wrap{padding:16px}.top,.tbar{padding:10px 16px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.32.9/src-min-noconflict/ace.js"></script>
@@ -162,6 +177,7 @@ const ST={new:['○','Не начата'],in_progress:['◐','В процесс�
 const CYC=['new','in_progress','solved','review'],RANK={Easy:0,Medium:1,Hard:2};
 let TASKS=[],TESTS={},P={},cur=null,ed=null,loading=false,pend=null,seq=0,W=null,ready=null,flat=[];
 const F={q:'',d:new Set(),t:new Set(),s:'all',y:false,auto:false,sort:'rank'};
+
 /* ---------- Python worker (Pyodide) ---------- */
 function workerMain(){
  let py;
@@ -195,7 +211,6 @@ function exec(code,tests,unordered){
   w.postMessage({id,run:{code,tests:JSON.stringify(tests),unordered:!!unordered}});
  });
 }
-
 
 /* ---------- progress ---------- */
 const saveP=()=>LS.set('yit-progress',JSON.stringify(P));
@@ -245,15 +260,39 @@ function renderAll(){
  $('cnt').textContent=`Показано ${flat.length} из ${N}`;
 }
 
-/* ---------- task page ---------- */
+/* ---------- task page (ОБНОВЛЕНО) ---------- */
+function renderDetails(d,t){
+ if(!d)return '';
+ let h='';
+ if(d.statement)h+=`<h3>Условие</h3><div class="desc">${md(d.statement)}</div>`;
+ if(d.input)h+=`<div class="io-block"><b>Вход:</b> ${esc(d.input)}</div>`;
+ if(d.output)h+=`<div class="io-block"><b>Выход:</b> ${esc(d.output)}</div>`;
+ if(Array.isArray(d.examples)&&d.examples.length){
+  h+='<h3>Примеры</h3><div class="examples">';
+  d.examples.forEach((ex,i)=>{
+   h+=`<div class="example"><div class="ex-row"><b>#${i+1} вход</b> <code>${esc(ex.input)}</code></div><div class="ex-row"><b>выход</b> <code>${esc(ex.output)}</code></div>`;
+   if(ex.explanation)h+=`<div class="ex-exp">${esc(ex.explanation)}</div>`;
+   h+='</div>';
+  });
+  h+='</div>';
+ }
+ if(d.constraints)h+=`<h3>Ограничения</h3><div class="desc"><p>${esc(d.constraints)}</p></div>`;
+ if(d.idea)h+=`<details class="idea"><summary>Показать идею решения</summary><p>${esc(d.idea)}</p></details>`;
+ if(Array.isArray(d.tags)&&d.tags.length){
+  h+='<div class="det-tags">'+d.tags.map(x=>`<span class="tag">${esc(x)}</span>`).join('')+'</div>';
+ }
+ return h;
+}
 function renderTask(){
  const t=cur,p=P[t.id]||{},i=flat.findIndex(x=>x.id===t.id);
  $('thead').innerHTML=`<h2>${esc(t.title)}</h2><span class="b ${t.difficulty}">${t.difficulty}</span>${t.yandex_rank?`<span class="tag y">Yandex #${t.yandex_rank}</span>`:t.source==='Yandex'?'<span class="tag y">★ контест Яндекса</span>':''}<span class="tag">${esc(t.topic)}</span>${t.auto_tests?'<span class="tag ok">⚡ автотесты</span>':''}`;
  $('sel').value=stOf(t);$('pos').textContent=i>=0?`${i+1} / ${flat.length}`:'';
- $('tinfo').innerHTML=`<h3>Условие</h3><div class="desc">${t.description?md(t.description):'<p class="muted">Описание пока не добавлено. Полное условие — по ссылке на оригинал.</p>'}</div>
- ${t.contract?`<h3>Контракт</h3><pre class="code">${esc(t.contract)}</pre><div class="sub">Реализуйте функцию <code>solve(...)</code>.</div>`:''}
- <div class="bar">${t.url?`<a class="btn" href="${esc(t.url)}" target="_blank" rel="noopener">Открыть оригинал ↗</a>`:''}</div>
- <div class="sub">Попыток: ${p.attempts||0} · успешных прогонов: ${p.passed||0}</div>`;
+ const details=renderDetails(t.details,t);
+ const fallback=!details&&t.description?`<h3>Условие</h3><div class="desc">${md(t.description)}</div>`:'<h3>Условие</h3><p class="muted">Описание пока не добавлено. Полное условие — по ссылке на оригинал.</p>';
+ $('tinfo').innerHTML=(details||fallback)
+  +(t.contract?`<h3>Контракт</h3><pre class="code">${esc(t.contract)}</pre><div class="sub">Реализуйте функцию <code>solve(...)</code>.</div>`:'')
+  +`<div class="bar">${t.url?`<a class="btn" href="${esc(t.url)}" target="_blank" rel="noopener">Открыть оригинал ↗</a>`:''}</div>`
+  +`<div class="sub">Попыток: ${p.attempts||0} · успешных прогонов: ${p.passed||0}</div>`;
 }
 function loadCode(){loading=true;ed.setValue((P[cur.id]||{}).code||starter(cur),-1);ed.session.getUndoManager().reset();loading=false}
 function goto(id){location.hash='#/t/'+id}
@@ -295,7 +334,6 @@ async function run(){
  }catch(e){box(`<div class="r no">Не удалось запустить Python: ${esc(e.message)}. Проверьте соединение и обновите страницу.</div>`)}
  finally{$('run').disabled=false}
 }
-
 
 /* ---------- routing / boot ---------- */
 function route(){

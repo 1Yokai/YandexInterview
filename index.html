@@ -80,7 +80,12 @@ summary span:first-child{flex:1}
 <script>
 const RUNNER_PY=String.raw`import json, sys, io, traceback
 
-def run_tests(code, tests_json):
+def canon(v):
+    if isinstance(v, list):
+        return sorted((canon(x) for x in v), key=lambda x: json.dumps(x, sort_keys=True, default=str))
+    return v
+
+def run_tests(code, tests_json, unordered=False):
     buf, old = io.StringIO(), sys.stdout
     sys.stdout = buf
     out = {"res": [], "fatal": ""}
@@ -102,7 +107,7 @@ def run_tests(code, tests_json):
                         g2 = json.loads(json.dumps(got))
                     except Exception:
                         g2 = got
-                    r["ok"] = (g2 == exp)
+                    r["ok"] = (canon(g2) == canon(exp)) if unordered else (g2 == exp)
                     r["got"] = json.dumps(g2, ensure_ascii=False, default=str)
                 except Exception as e:
                     r["ok"] = False
@@ -136,7 +141,7 @@ function workerMain(){
     py.runPython(d.init);postMessage({ready:1});
    }catch(err){postMessage({initError:String(err)})}
   }else if(d.run){
-   try{postMessage({id:d.id,out:py.globals.get('run_tests')(d.run.code,d.run.tests)})}
+   try{postMessage({id:d.id,out:py.globals.get('run_tests')(d.run.code,d.run.tests,d.run.unordered)})}
    catch(err){postMessage({id:d.id,err:String(err)})}
   }
  };
@@ -148,13 +153,13 @@ function spawn(){
  ready.catch(()=>{});
  W.postMessage({init:RUNNER_PY});
 }
-function exec(code,tests){
+function exec(code,tests,unordered){
  return new Promise(async(resolve,reject)=>{
   try{await ready}catch(e){reject(e);return}
   const id=++seq,w=W;
   const tm=setTimeout(()=>{w.terminate();spawn();resolve({timeout:1})},4000);
   w.onmessage=e=>{if(e.data.id===id){clearTimeout(tm);resolve(e.data)}};
-  w.postMessage({id,run:{code,tests:JSON.stringify(tests)}});
+  w.postMessage({id,run:{code,tests:JSON.stringify(tests),unordered:!!unordered}});
  });
 }
 
@@ -167,7 +172,7 @@ function upd(id,patch){
  if(changed){renderList();if(cur&&cur.id===id)renderMeta()}
 }
 function flush(){if(pend){clearTimeout(pend.tm);const p=P[pend.id]||{};upd(pend.id,{code:pend.code,status:(p.status||'new')==='new'?'in_progress':p.status});pend=null}}
-const starter=t=>{const m=(t.contract||'').match(/^def solve\([^\n]*:\s*$/m);return (m?m[0].trim():'def solve(...):')+'\n    pass\n'};
+const starter=t=>{const c=(t.contract||(TESTS[t.title]||{}).contract||'').trim();const h=/^def /.test(c)?c.replace(/:\s*$/,''):/^solve\(/.test(c)?'def '+c:'def solve(*args)';return h+':\n    pass\n'};
 
 /* ---------- rendering ---------- */
 function md(s){
@@ -246,7 +251,7 @@ async function run(){
  if(!t.auto_tests||!spec){box('<div class="r wn">Для этой задачи автотесты пока не заведены. Используйте оригинальный judge или добавьте тесты в tests.json.</div>');return}
  $('run').disabled=true;box('<div class="r in">Выполняется…</div>');
  try{
-  const r=await exec(code,spec.tests);
+  const r=await exec(code,spec.tests,spec.unordered);
   if(r.timeout){box('<div class="r no">Превышен лимит 4 секунды.</div>');return}
   if(r.err){box(`<div class="r no">${esc(r.err)}</div>`);return}
   const o=JSON.parse(r.out);let h='';

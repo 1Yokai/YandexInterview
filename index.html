@@ -41,8 +41,16 @@ tbody tr{cursor:pointer}tbody tr:hover{background:var(--hov)}tbody tr.last{backg
 .cnt{margin-top:10px;font-size:13px;color:var(--muted)}
 .tbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 24px;border-bottom:1px solid var(--bd)}
 #thead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex:1;min-width:260px}#thead h2{font-size:18px;margin:0 6px 0 4px}
-#timer{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:var(--muted);padding:4px 8px;border:1px solid var(--bd);border-radius:8px;background:var(--panel)}
-#timer.over{color:var(--bad);border-color:#5a1a1a;background:rgba(248,113,113,.08)}
+/* timer */
+.timer-wrap{display:flex;align-items:center;gap:4px;padding:3px 6px 3px 8px;border:1px solid var(--bd);border-radius:8px;background:var(--panel)}
+.timer-wrap.over{border-color:#5a1a1a;background:rgba(248,113,113,.08)}
+#timer{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:var(--text);min-width:70px;text-align:center;user-select:none}
+.timer-wrap.over #timer{color:var(--bad)}
+.timer-wrap .tbtn{padding:2px 7px;font-size:12px;line-height:1.2;background:transparent;border:1px solid transparent;color:var(--muted)}
+.timer-wrap .tbtn:hover{color:var(--text);border-color:var(--bd);background:var(--hov)}
+.timer-wrap .tbtn.on{color:var(--acc)}
+.timer-wrap input[type=number]{width:48px;padding:2px 4px;font-size:12px;text-align:center;background:var(--bg);color:var(--text);border:1px solid var(--bd);border-radius:6px}
+.timer-wrap small{font-size:11px;color:var(--muted);margin-right:2px}
 .split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:12px;padding:12px 24px}
 .panel{background:var(--panel);border:1px solid var(--bd);border-radius:12px;padding:14px}
 #tinfo{max-height:calc(100vh - 140px);overflow:auto;position:sticky;top:64px}
@@ -103,7 +111,14 @@ pre.code{padding:10px;overflow:auto;margin:6px 0;border:1px solid var(--bd)}.mut
 <div class="tbar">
 <button data-a="back">← К списку</button><button data-a="prev">‹</button><span class="sub" id="pos"></span><button data-a="next">›</button><button data-a="rnd" title="Случайная нерешённая">🎲</button>
 <div id="thead"></div>
-<span id="timer" title="Время на задачу (лимит 30 минут)">⏱ 00:00</span>
+<div class="timer-wrap" id="timer-wrap">
+  <span id="timer" title="Таймер задачи">⏱ 00:00</span>
+  <button class="tbtn" id="t-pause" title="Пауза / продолжить">⏸</button>
+  <button class="tbtn" id="t-reset" title="Сбросить время задачи">↺</button>
+  <button class="tbtn" id="t-mode"  title="Режим: прямой ↕ обратный">↑</button>
+  <input type="number" id="t-limit" min="1" max="180" value="30" title="Лимит, минут">
+  <small>мин</small>
+</div>
 <select id="sel"></select>
 </div>
 <div class="split">
@@ -118,7 +133,7 @@ pre.code{padding:10px;overflow:auto;margin:6px 0;border:1px solid var(--bd)}.mut
 <span class="sub" id="py">Python: загрузка…</span>
 </div>
 <div id="res"></div>
-<div class="sub">Ctrl/⌘+Enter — запуск · j / k — следующая / предыдущая задача (вне редактора) · лимит 30 мин → задача уходит на повтор</div>
+<div class="sub">Ctrl/⌘+Enter — запуск · j / k — следующая / предыдущая задача · лимит превышен → задача уходит на повтор</div>
 </div>
 </div>
 </section>
@@ -173,9 +188,8 @@ const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 const ST={new:['○','Не начата'],in_progress:['◐','В процессе'],solved:['●','Решена'],review:['↻','На повтор']};
 const CYC=['new','in_progress','solved','review'],RANK={Easy:0,Medium:1,Hard:2};
-const LIMIT_SEC=30*60;
+const DEFAULT_LIMIT=30*60;
 let TASKS=[],TESTS={},SOLUTIONS={},P={},cur=null,ed=null,loading=false,pend=null,seq=0,W=null,ready=null,flat=[];
-let sessionStart=0,timerInt=null;
 const F={q:'',d:new Set(),t:new Set(),s:'all',y:false,auto:false,sort:'rank'};
 
 /* ---------- Python worker ---------- */
@@ -229,32 +243,91 @@ function md(s){
 }
 
 /* ---------- timer ---------- */
-function fmtTime(s){
+const TIMER = {
+  mode: LS.get('yit-timer-mode')==='down' ? 'down' : 'up',
+  session: { active:false, running:false, startTs:0, elapsed:0 },
+  int: null
+};
+function getLimit(t){const p=P[t.id]||{};return p.limit_sec || DEFAULT_LIMIT;}
+function getTotalSec(){
+ if(!cur)return 0;
+ const p=P[cur.id]||{};
+ let t=p.time_spent||0;
+ if(TIMER.session.active){
+  t+=TIMER.session.elapsed;
+  if(TIMER.session.running)t+=(Date.now()-TIMER.session.startTs)/1000;
+ }
+ return Math.max(0,Math.floor(t));
+}
+function fmtSec(s){
  s=Math.max(0,Math.floor(s));
- const m=Math.floor(s/60),sec=s%60;
- return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+ const h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+ if(h>0)return `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+ return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
 }
-function currentSessionSec(){return sessionStart?Math.floor((Date.now()-sessionStart)/1000):0;}
-function totalSec(t){const p=P[t.id]||{};return (p.time_spent||0)+currentSessionSec();}
 function updateTimer(){
+ if(!cur){return;}
+ const wrap=$('timer-wrap'),el=$('timer');if(!el)return;
+ const total=getTotalSec(),limit=getLimit(cur);
+ let text,over=false;
+ if(TIMER.mode==='up'){
+  text='⏱ '+fmtSec(total);
+  if(total>=limit)over=true;
+ }else{
+  const left=limit-total;
+  text=left>=0?('⏱ '+fmtSec(left)+' до конца'):('⏱ -'+fmtSec(-left)+' просрочено');
+  if(left<=0)over=true;
+ }
+ el.textContent=text;
+ wrap.classList.toggle('over',over);
+ $('t-mode').textContent=TIMER.mode==='up'?'↑':'↓';
+ $('t-mode').classList.toggle('on',TIMER.mode==='down');
+ $('t-pause').textContent=TIMER.session.running?'⏸':'▶';
+ $('t-pause').classList.toggle('on',!TIMER.session.running);
+}
+function startTimerSession(){
  if(!cur)return;
- const el=$('timer');if(!el)return;
- const s=totalSec(cur);
- el.textContent='⏱ '+fmtTime(s);
- el.classList.toggle('over',s>=LIMIT_SEC);
-}
-function startTimer(){
- sessionStart=Date.now();
- if(timerInt)clearInterval(timerInt);
+ TIMER.session={active:true,running:true,startTs:Date.now(),elapsed:0};
+ if(TIMER.int)clearInterval(TIMER.int);
+ TIMER.int=setInterval(updateTimer,1000);
  updateTimer();
- timerInt=setInterval(updateTimer,1000);
 }
-function stopTimer(){if(timerInt){clearInterval(timerInt);timerInt=null;}}
+function pauseTimer(){
+ if(!TIMER.session.active||!TIMER.session.running)return;
+ TIMER.session.elapsed+=(Date.now()-TIMER.session.startTs)/1000;
+ TIMER.session.running=false;
+ updateTimer();
+}
+function resumeTimer(){
+ if(!TIMER.session.active||TIMER.session.running)return;
+ TIMER.session.startTs=Date.now();
+ TIMER.session.running=true;
+ updateTimer();
+}
+function resetTimer(){
+ if(!cur)return;
+ if(!confirm('Сбросить время этой задачи в 0?'))return;
+ const p=P[cur.id]||{};
+ P[cur.id]={...p,time_spent:0};saveP();
+ const wasRunning=TIMER.session.running;
+ TIMER.session={active:true,running:wasRunning,startTs:Date.now(),elapsed:0};
+ updateTimer();
+}
+function stopTimerInterval(){if(TIMER.int){clearInterval(TIMER.int);TIMER.int=null;}}
 function commitSession(){
- if(!cur||!sessionStart)return;
- const s=currentSessionSec();
- if(s>0){const p=P[cur.id]||{};upd(cur.id,{time_spent:(p.time_spent||0)+s});}
- sessionStart=0;
+ if(!cur||!TIMER.session.active)return;
+ let elapsed=TIMER.session.elapsed;
+ if(TIMER.session.running)elapsed+=(Date.now()-TIMER.session.startTs)/1000;
+ elapsed=Math.floor(elapsed);
+ if(elapsed>0){
+  const p=P[cur.id]||{};
+  P[cur.id]={...p,time_spent:(p.time_spent||0)+elapsed};saveP();
+ }
+ TIMER.session={active:false,running:false,startTs:0,elapsed:0};
+ stopTimerInterval();
+}
+function setMode(m){
+ TIMER.mode=m;LS.set('yit-timer-mode',m);updateTimer();
 }
 
 /* ---------- list page ---------- */
@@ -327,13 +400,15 @@ function renderTask(){
      ${md('```python\n'+sol+'\n```')}
    </details>`:'';
  const spent=p.time_spent||0;
- const spentLine=spent?`<div class="sub">Всего времени: ${fmtTime(spent)}${spent>=LIMIT_SEC?' · превышен лимит 30 мин':''}</div>`:'';
+ const spentLine=spent?`<div class="sub">Всего времени: ${fmtSec(spent)}${spent>=getLimit(t)?' · превышен лимит':''}</div>`:'';
  $('tinfo').innerHTML=(details||fallback)
   +solHtml
   +(t.contract?`<h3>Контракт</h3><pre class="code">${esc(t.contract)}</pre><div class="sub">Реализуйте функцию <code>solve(...)</code>.</div>`:'')
   +`<div class="bar">${t.url?`<a class="btn" href="${esc(t.url)}" target="_blank" rel="noopener">Открыть оригинал ↗</a>`:''}</div>`
   +`<div class="sub">Попыток: ${p.attempts||0} · успешных прогонов: ${p.passed||0}</div>`
   +spentLine;
+ // Обновить поле лимита
+ $('t-limit').value=Math.round(getLimit(t)/60);
  updateTimer();
 }
 function loadCode(){loading=true;ed.setValue((P[cur.id]||{}).code||starter(cur),-1);ed.session.getUndoManager().reset();loading=false}
@@ -364,6 +439,22 @@ $('tinfo').addEventListener('click',e=>{
  }
 });
 
+/* ---------- timer controls ---------- */
+$('t-pause').onclick=()=>{TIMER.session.running?pauseTimer():resumeTimer();};
+$('t-reset').onclick=resetTimer;
+$('t-mode').onclick=()=>setMode(TIMER.mode==='up'?'down':'up');
+$('t-limit').addEventListener('change',e=>{
+ if(!cur)return;
+ let mins=parseInt(e.target.value,10);
+ if(isNaN(mins)||mins<1)mins=1;
+ if(mins>180)mins=180;
+ e.target.value=mins;
+ const p=P[cur.id]||{};
+ P[cur.id]={...p,limit_sec:mins*60};saveP();
+ updateTimer();
+ renderTask();
+});
+
 /* ---------- run ---------- */
 const box=h=>{$('res').innerHTML=h};
 async function run(){
@@ -388,10 +479,10 @@ async function run(){
    const all=ok===o.res.length&&o.res.length>0;
    h=`<div class="r ${all?'ok':'wn'}"><b>${all?'Все тесты пройдены.':`Пройдено: ${ok}/${o.res.length}`}</b></div>`+h;
    if(all){
-    const total=totalSec(t);
-    if(total>=LIMIT_SEC){
+    const total=getTotalSec(),limit=getLimit(t);
+    if(total>=limit){
      upd(t.id,{status:'review',passed:(P[t.id].passed||0)+1});
-     h='<div class="r wn"><b>Все тесты пройдены, но задача заняла больше 30 минут — отправлена на повтор.</b></div>'+h;
+     h='<div class="r wn"><b>Все тесты пройдены, но лимит времени превышен — задача отправлена на повтор.</b></div>'+h;
     }else{
      upd(t.id,{status:'solved',passed:(P[t.id].passed||0)+1});
      h='<div class="r ok"><b>Все тесты пройдены — задача отмечена решённой.</b></div>'+h;
@@ -412,9 +503,9 @@ function route(){
   cur=t;LS.set('yit-cur',t.id);flat=view();
   $('v-list').hidden=true;$('v-task').hidden=false;
   renderTask();loadCode();$('res').innerHTML='';ed.resize(true);window.scrollTo(0,0);
-  startTimer();
+  startTimerSession();
  }else{
-  cur=null;stopTimer();
+  cur=null;
   $('v-task').hidden=true;$('v-list').hidden=false;renderAll()
  }
 }
@@ -458,10 +549,10 @@ $('sel').onchange=e=>upd(cur.id,{status:e.target.value});
 $('run').onclick=run;
 $('save').onclick=()=>{flush();const p=P[cur.id]||{};upd(cur.id,{code:ed.getValue(),status:(p.status||'new')==='new'?'in_progress':p.status});box('<div class="r ok">Сохранено.</div>')};
 $('solved').onclick=()=>{
- const total=totalSec(cur);
- if(total>=LIMIT_SEC){
+ const total=getTotalSec(),limit=getLimit(cur);
+ if(total>=limit){
   upd(cur.id,{code:ed.getValue(),status:'review'});
-  box('<div class="r wn">Задача заняла больше 30 минут — отправлена на повтор.</div>');
+  box('<div class="r wn">Лимит времени превышен — задача отправлена на повтор.</div>');
  }else{
   upd(cur.id,{code:ed.getValue(),status:'solved'});
   box('<div class="r ok">Задача отмечена как решённая.</div>');

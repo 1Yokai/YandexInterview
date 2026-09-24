@@ -52,7 +52,7 @@ pre.code{padding:10px;overflow:auto;margin:6px 0;border:1px solid var(--bd)}.mut
 .bar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
 .r{padding:6px 10px;border-radius:8px;margin:4px 0;font-size:13px;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
 .r.ok{background:rgba(74,222,128,.1);color:var(--ok)}.r.no{background:rgba(248,113,113,.1);color:var(--bad)}.r.wn{background:rgba(251,191,36,.1);color:var(--warn)}.r.in{background:#0a0a0b;color:var(--muted)}
-/* NEW: details blocks */
+/* details blocks */
 .examples{margin:6px 0 10px}
 .example{background:#0a0a0b;border:1px solid var(--bd);border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px}
 .example .ex-row{margin:2px 0;font-family:ui-monospace,Menlo,Consolas,monospace}
@@ -67,6 +67,12 @@ pre.code{padding:10px;overflow:auto;margin:6px 0;border:1px solid var(--bd)}.mut
 .det-tags .tag{font-size:11px;background:#17171a;border-color:#2a2a30}
 .io-block{margin:6px 0;font-size:13px;color:var(--text)}
 .io-block b{color:var(--muted);font-weight:600;margin-right:4px}
+/* solution block */
+.solution{margin-top:6px}
+.solution>summary{cursor:pointer;color:var(--ok);font-size:13px;user-select:none}
+.solution>summary:hover{text-decoration:underline}
+.solution .sol-bar{display:flex;gap:8px;margin:8px 0 4px}
+.solution .sol-bar button{font-size:12px;padding:4px 10px}
 @media(max-width:900px){.split{grid-template-columns:1fr;padding:12px}#tinfo{position:static;max-height:none}.dist{grid-template-columns:1fr}.c-tp{display:none}.wrap{padding:16px}.top,.tbar{padding:10px 16px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.32.9/src-min-noconflict/ace.js"></script>
@@ -175,7 +181,7 @@ const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 const ST={new:['○','Не начата'],in_progress:['◐','В процессе'],solved:['●','Решена'],review:['↻','На повтор']};
 const CYC=['new','in_progress','solved','review'],RANK={Easy:0,Medium:1,Hard:2};
-let TASKS=[],TESTS={},P={},cur=null,ed=null,loading=false,pend=null,seq=0,W=null,ready=null,flat=[];
+let TASKS=[],TESTS={},SOLUTIONS={},P={},cur=null,ed=null,loading=false,pend=null,seq=0,W=null,ready=null,flat=[];
 const F={q:'',d:new Set(),t:new Set(),s:'all',y:false,auto:false,sort:'rank'};
 
 /* ---------- Python worker (Pyodide) ---------- */
@@ -260,8 +266,8 @@ function renderAll(){
  $('cnt').textContent=`Показано ${flat.length} из ${N}`;
 }
 
-/* ---------- task page (ОБНОВЛЕНО) ---------- */
-function renderDetails(d,t){
+/* ---------- task page ---------- */
+function renderDetails(d){
  if(!d)return '';
  let h='';
  if(d.statement)h+=`<h3>Условие</h3><div class="desc">${md(d.statement)}</div>`;
@@ -287,9 +293,20 @@ function renderTask(){
  const t=cur,p=P[t.id]||{},i=flat.findIndex(x=>x.id===t.id);
  $('thead').innerHTML=`<h2>${esc(t.title)}</h2><span class="b ${t.difficulty}">${t.difficulty}</span>${t.yandex_rank?`<span class="tag y">Yandex #${t.yandex_rank}</span>`:t.source==='Yandex'?'<span class="tag y">★ контест Яндекса</span>':''}<span class="tag">${esc(t.topic)}</span>${t.auto_tests?'<span class="tag ok">⚡ автотесты</span>':''}`;
  $('sel').value=stOf(t);$('pos').textContent=i>=0?`${i+1} / ${flat.length}`:'';
- const details=renderDetails(t.details,t);
+ const details=renderDetails(t.details);
  const fallback=!details&&t.description?`<h3>Условие</h3><div class="desc">${md(t.description)}</div>`:'<h3>Условие</h3><p class="muted">Описание пока не добавлено. Полное условие — по ссылке на оригинал.</p>';
+ const sol=SOLUTIONS[t.title];
+ const solHtml=sol?`<h3>Решение</h3>
+   <details class="solution" data-sol="1">
+     <summary>Показать решение</summary>
+     <div class="sol-bar">
+       <button type="button" data-a="sol-into-editor">Вставить в редактор</button>
+       <button type="button" data-a="sol-copy">Скопировать</button>
+     </div>
+     ${md('```python\n'+sol+'\n```')}
+   </details>`:'';
  $('tinfo').innerHTML=(details||fallback)
+  +solHtml
   +(t.contract?`<h3>Контракт</h3><pre class="code">${esc(t.contract)}</pre><div class="sub">Реализуйте функцию <code>solve(...)</code>.</div>`:'')
   +`<div class="bar">${t.url?`<a class="btn" href="${esc(t.url)}" target="_blank" rel="noopener">Открыть оригинал ↗</a>`:''}</div>`
   +`<div class="sub">Попыток: ${p.attempts||0} · успешных прогонов: ${p.passed||0}</div>`;
@@ -305,6 +322,28 @@ function rnd(){
  const c=view().filter(x=>(!cur||x.id!==cur.id)&&stOf(x)!=='solved');
  if(c.length)goto(c[Math.floor(Math.random()*c.length)].id);
 }
+
+/* ---------- solution actions (делегирование) ---------- */
+$('tinfo').addEventListener('click',e=>{
+ const a=e.target.dataset.a;
+ if(a==='sol-into-editor'){
+  const sol=SOLUTIONS[cur.title];
+  if(!sol)return;
+  if(confirm('Заменить текущий код редактора эталонным решением?')){
+   loading=true;ed.setValue(sol,-1);ed.session.getUndoManager().reset();loading=false;
+   const p=P[cur.id]||{};
+   upd(cur.id,{code:sol,status:(p.status||'new')==='new'?'in_progress':p.status});
+  }
+ }else if(a==='sol-copy'){
+  const sol=SOLUTIONS[cur.title];
+  if(!sol)return;
+  navigator.clipboard.writeText(sol).then(
+   ()=>{const btn=e.target;const old=btn.textContent;btn.textContent='Скопировано ✓';setTimeout(()=>btn.textContent=old,1200)},
+   ()=>alert('Не удалось скопировать')
+  );
+ }
+});
+
 /* ---------- run ---------- */
 const box=h=>{$('res').innerHTML=h};
 async function run(){
@@ -347,8 +386,12 @@ function route(){
 }
 async function boot(){
  try{
-  const [a,b]=await Promise.all([fetch('tasks.json').then(r=>r.json()),fetch('tests.json').then(r=>r.json())]);
-  TASKS=a.tasks;TESTS=b;
+  const [a,b,c]=await Promise.all([
+   fetch('tasks.json').then(r=>r.json()),
+   fetch('tests.json').then(r=>r.json()),
+   fetch('solutions.json').then(r=>r.json()).catch(()=>({}))
+  ]);
+  TASKS=a.tasks;TESTS=b;SOLUTIONS=c||{};
  }catch(e){$('lead').innerHTML='<span style="color:var(--bad)">Не удалось загрузить tasks.json / tests.json. Локально откройте сайт через <code>python -m http.server</code>, а не как файл.</span>';return}
  try{P=JSON.parse(LS.get('yit-progress')||'{}')}catch(e){P={}}
  ed=ace.edit('editor',{mode:'ace/mode/python',theme:'ace/theme/tomorrow_night',tabSize:4,useSoftTabs:true,showPrintMargin:false,fontSize:15,wrap:true,enableBasicAutocompletion:false,enableLiveAutocompletion:false,enableSnippets:false,showGutter:true});

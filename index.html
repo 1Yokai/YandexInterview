@@ -3,80 +3,113 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Yandex Interview Trainer</title>
+<title>Yandex Prep — тренажёр алгоритмических задач</title>
 <style>
-:root{--bg:#0f1115;--panel:#171a21;--bd:#2a2f3a;--text:#e6e8ee;--muted:#8b93a3;--acc:#7c8cff;--ok:#4cc27a;--warn:#e8b04a;--bad:#ff6b6b;--rev:#5cb6ff}
-*{box-sizing:border-box}
+:root{--bg:#0a0a0b;--panel:#111113;--bd:#232327;--hov:#17171a;--text:#ececef;--muted:#8e8e96;--acc:#ffd23f;--ok:#4ade80;--warn:#fbbf24;--bad:#f87171;--rev:#60a5fa}
+*{box-sizing:border-box}[hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 -apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--bd)}
-h1{font-size:18px;margin:0}h2{font-size:20px;margin:6px 0}h3{font-size:12px;margin:14px 0 6px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
-.sub{color:var(--muted);font-size:12px}
-#stats{display:flex;gap:14px;align-items:center;font-size:13px;flex-wrap:wrap}
-.pb{width:140px;height:6px;background:var(--bd);border-radius:9px;overflow:hidden}.pb i{display:block;height:100%;background:var(--ok)}
-.app{display:grid;grid-template-columns:330px minmax(0,1fr) minmax(0,1.3fr);gap:12px;padding:12px;max-width:1700px;margin:0 auto;align-items:start}
-aside,.panel{background:var(--panel);border:1px solid var(--bd);border-radius:12px;padding:12px}
-aside{position:sticky;top:12px;max-height:calc(100vh - 24px);overflow:auto}
-button,.btn,select,input[type=text]{font:inherit;font-size:13px;color:var(--text);background:transparent;border:1px solid var(--bd);border-radius:8px;padding:5px 10px;cursor:pointer;text-decoration:none;display:inline-block}
-select{background:var(--panel)}
-button:hover,.btn:hover{border-color:var(--acc)}
-button.on{background:var(--acc);border-color:var(--acc);color:#0b0d12}
-button.primary{background:var(--acc);border-color:var(--acc);color:#0b0d12;font-weight:600}
-button:disabled{opacity:.5;cursor:wait}
-#q{width:100%;cursor:text;margin-bottom:8px}
-.chips,.row{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;align-items:center}
-.cnt{font-size:12px;color:var(--muted);margin:6px 0}
-details{margin-bottom:2px}
-summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;padding:6px 4px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;position:sticky;top:-12px;background:var(--panel);z-index:1}
-summary::-webkit-details-marker{display:none}summary::before{content:"▸";margin-right:6px}details[open]>summary::before{content:"▾"}
-summary span:first-child{flex:1}
-.item{display:flex;gap:8px;align-items:center;padding:6px 8px;border-radius:8px;cursor:pointer;border:1px solid transparent;font-size:14px}
-.item:hover{background:#1e222b}.item.on{background:#1e222b;border-color:var(--acc)}
-.item .t{flex:1}.ic{width:16px;text-align:center}
-.s-new .ic{color:var(--muted)}.s-in_progress .ic{color:var(--warn)}.s-solved .ic{color:var(--ok)}.s-review .ic{color:var(--rev)}
-.b{font-size:11px;padding:1px 7px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+a{color:var(--acc)}
+.top{display:flex;align-items:center;gap:20px;padding:12px 24px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:rgba(10,10,11,.92);backdrop-filter:blur(6px);z-index:5;flex-wrap:wrap}
+.brand{font-weight:800;letter-spacing:.08em;font-size:15px}.brand span{color:var(--acc)}
+.top .sp{flex:1}
+#hstats{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted)}#hstats b{color:var(--text)}
+.wrap{max-width:1100px;margin:0 auto;padding:24px}
+.crumbs{font-size:13px;color:var(--muted)}h1{font-size:32px;margin:6px 0 2px}h2.sec{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:28px 0 10px}
+.sub{color:var(--muted);font-size:13px}
+button,.btn,select,input[type=text]{font:inherit;font-size:13px;color:var(--text);background:var(--panel);border:1px solid var(--bd);border-radius:8px;padding:6px 12px;cursor:pointer;text-decoration:none;display:inline-block}
+button:hover,.btn:hover,select:hover{border-color:#3a3a40}
+button.primary{background:var(--acc);border-color:var(--acc);color:#1a1400;font-weight:700}button:disabled{opacity:.5;cursor:wait}
+.dist{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:var(--panel);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;cursor:pointer}.card:hover{border-color:#3a3a40}.card.on{border-color:var(--acc)}
+.card .cl{font-size:13px;font-weight:600}.card .cn{font-size:28px;font-weight:700}.card small{font-size:13px;color:var(--muted);margin-left:8px;font-weight:400}.card .cs{font-size:12px;color:var(--muted)}
 .Easy{color:var(--ok)}.Medium{color:var(--warn)}.Hard{color:var(--bad)}
-.tag{font-size:12px;color:var(--muted);border:1px solid var(--bd);border-radius:99px;padding:1px 8px}.tag.ok{color:var(--ok)}
-.desc p{margin:0 0 10px}.desc code,.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#0d0f14;border-radius:5px}
-.desc code{padding:1px 5px}pre.code{padding:10px;overflow:auto;margin:6px 0;border:1px solid var(--bd)}
-.muted{color:var(--muted)}
-#editor{height:520px;border-radius:10px;border:1px solid var(--bd)}
+.pb{height:5px;background:var(--bd);border-radius:9px;overflow:hidden;margin:8px 0 6px}.pb i{display:block;height:100%;background:currentColor}
+#hstats .pb{width:120px;margin:0;color:var(--ok)}
+.topics{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border-radius:99px;padding:5px 12px}.chip.on{border-color:var(--acc);color:var(--acc)}.chip b{margin-left:4px;color:var(--muted);font-weight:500}.chip small{margin-left:6px;color:var(--ok)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+#q{min-width:240px;cursor:text}.tools label{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center;cursor:pointer}
+table{width:100%;border-collapse:collapse;border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:var(--panel)}
+th{font-size:12px;text-align:left;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--bd)}
+td{padding:10px 12px;border-bottom:1px solid var(--bd)}tr:last-child td{border-bottom:0}
+tbody tr{cursor:pointer}tbody tr:hover{background:var(--hov)}tbody tr.last{background:#1a1808}
+.c-st{width:36px;text-align:center;font-size:16px}.c-n{width:64px;color:var(--muted);font-variant-numeric:tabular-nums}.c-tp{color:var(--muted);font-size:13px}
+.s-new .c-st{color:var(--muted)}.s-in_progress .c-st{color:var(--warn)}.s-solved .c-st{color:var(--ok)}.s-review .c-st{color:var(--rev)}
+.b{font-size:12px;font-weight:600}
+.tg{font-size:11px;color:var(--ok);border:1px solid #1d4d2e;border-radius:99px;padding:0 7px;margin-left:6px;white-space:nowrap}
+.tag{font-size:12px;color:var(--muted);border:1px solid var(--bd);border-radius:99px;padding:1px 9px}.tag.ok{color:var(--ok)}.tag.y{color:var(--acc);border-color:#5a4a10}
+.cnt{margin-top:10px;font-size:13px;color:var(--muted)}
+/* task page */
+.tbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 24px;border-bottom:1px solid var(--bd)}
+#thead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex:1;min-width:260px}#thead h2{font-size:18px;margin:0 6px 0 4px}
+.split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:12px;padding:12px 24px}
+.panel{background:var(--panel);border:1px solid var(--bd);border-radius:12px;padding:14px}
+#tinfo{max-height:calc(100vh - 140px);overflow:auto;position:sticky;top:64px}
+h3{font-size:12px;margin:14px 0 6px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}h3:first-child{margin-top:0}
+.desc p{margin:0 0 10px}.desc code,.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;background:#0a0a0b;border-radius:5px}.desc code{padding:1px 5px}
+pre.code{padding:10px;overflow:auto;margin:6px 0;border:1px solid var(--bd)}.muted{color:var(--muted)}
+#editor{height:max(430px,60vh);border-radius:10px;border:1px solid var(--bd)}
 .bar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
 .r{padding:6px 10px;border-radius:8px;margin:4px 0;font-size:13px;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
-.r.ok{background:rgba(76,194,122,.12);color:var(--ok)}.r.no{background:rgba(255,107,107,.12);color:var(--bad)}.r.wn{background:rgba(232,176,74,.12);color:var(--warn)}.r.in{background:#0d0f14;color:var(--muted)}
-.foot{display:flex;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid var(--bd);flex-wrap:wrap}
-@media(max-width:1200px){.app{grid-template-columns:330px minmax(0,1fr)}aside{grid-row:span 2}}
-@media(max-width:820px){.app{grid-template-columns:1fr}aside{position:static;max-height:55vh;grid-row:auto}}
+.r.ok{background:rgba(74,222,128,.1);color:var(--ok)}.r.no{background:rgba(248,113,113,.1);color:var(--bad)}.r.wn{background:rgba(251,191,36,.1);color:var(--warn)}.r.in{background:#0a0a0b;color:var(--muted)}
+@media(max-width:900px){.split{grid-template-columns:1fr;padding:12px}#tinfo{position:static;max-height:none}.dist{grid-template-columns:1fr}.c-tp{display:none}.wrap{padding:16px}.top,.tbar{padding:10px 16px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.32.9/src-min-noconflict/ace.js"></script>
 </head>
 <body>
-<header>
-<div><h1>Yandex Interview Trainer</h1><div class="sub">Python · алгоритмы · Medium-first · без подсказок · прогресс хранится в вашем браузере</div></div>
-<div id="stats"></div>
+<header class="top">
+<a class="brand" href="#/" style="text-decoration:none;color:inherit">YANDEX<span>PREP</span></a>
+<div class="sp"></div>
+<div id="hstats"></div>
+<button id="exp" title="Скачать прогресс в JSON">Экспорт</button>
+<label class="btn" title="Загрузить прогресс из JSON">Импорт<input type="file" id="imp" accept=".json" hidden></label>
 </header>
-<div class="app">
-<aside>
-<input type="text" id="q" placeholder="Поиск: название или тема">
-<div class="chips" id="cd"><button class="on" data-d="Easy">Easy</button><button class="on" data-d="Medium">Medium</button><button class="on" data-d="Hard">Hard</button></div>
-<div class="chips" id="cs"><button class="on" data-s="all">Все</button><button data-s="unsolved">Нерешённые</button><button data-s="review">На повтор</button><button data-x="auto">С автотестами</button></div>
+
+<section id="v-list">
+<div class="wrap">
+<div class="crumbs">Главная / Компании / Yandex</div>
+<h1>Yandex</h1>
+<div class="sub" id="lead"></div>
+<div class="sub" style="margin-top:2px">Частота «Yandex #» — порядок в подборке CodeJeet (LeetCode-теги компаний); актуальность за последние месяцы не проверялась.</div>
+<h2 class="sec">Сложность</h2><div class="dist" id="dist"></div>
+<h2 class="sec">Темы</h2><div class="topics" id="topics"></div>
+<h2 class="sec">Все задачи</h2>
+<div class="tools">
+<input type="text" id="q" placeholder="Поиск по названию или теме">
+<select id="fs"><option value="all">Все статусы</option><option value="unsolved">Нерешённые</option><option value="in_progress">В процессе</option><option value="review">На повтор</option><option value="solved">Решённые</option></select>
+<select id="so"><option value="rank">Сортировка: частота Yandex</option><option value="diff">Сортировка: сложность</option><option value="title">Сортировка: название</option><option value="topic">Сортировка: тема</option></select>
+<label><input type="checkbox" id="fy"> только из подборки Yandex</label>
+<label><input type="checkbox" id="fa"> только с автотестами</label>
+<button id="rndl">🎲 Случайная нерешённая</button>
+</div>
+<table><thead><tr><th></th><th title="Позиция в подборке Yandex по частоте; ★ — задача с контеста Яндекса">Yandex #</th><th>Название</th><th>Тема</th><th>Сложность</th></tr></thead><tbody id="rows"></tbody></table>
 <div class="cnt" id="cnt"></div>
-<div id="list"></div>
-<div class="foot"><button id="exp">Экспорт прогресса</button><label class="btn">Импорт<input type="file" id="imp" accept=".json" hidden></label></div>
-</aside>
-<section class="panel" id="info"></section>
-<section class="panel">
+</div>
+</section>
+
+<section id="v-task" hidden>
+<div class="tbar">
+<button data-a="back">← К списку</button><button data-a="prev">‹</button><span class="sub" id="pos"></span><button data-a="next">›</button><button data-a="rnd" title="Случайная нерешённая">🎲</button>
+<div id="thead"></div>
+<select id="sel"></select>
+</div>
+<div class="split">
+<div class="panel" id="tinfo"></div>
+<div class="panel">
 <div id="editor"></div>
 <div class="bar">
 <button class="primary" id="run">▶ Запустить тесты</button>
 <button id="save">💾 Сохранить</button>
-<button id="solved">✓ Отметить решённой</button>
+<button id="solved">✓ Решена</button>
 <button id="reset">Сбросить код</button>
 <span class="sub" id="py">Python: загрузка…</span>
 </div>
 <div id="res"></div>
 <div class="sub">Ctrl/⌘+Enter — запуск · j / k — следующая / предыдущая задача (вне редактора)</div>
-</section>
 </div>
+</div>
+</section>
+
 <script>
 const RUNNER_PY=String.raw`import json, sys, io, traceback
 
@@ -121,14 +154,14 @@ def run_tests(code, tests_json, unordered=False):
     out["out"] = buf.getvalue()[:5000]
     return json.dumps(out, ensure_ascii=False)
 `;
+
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
-const ST={new:['○','Новая'],in_progress:['◐','В процессе'],solved:['●','Решена'],review:['↻','На повтор']};
-const RANK={Easy:0,Medium:1,Hard:2};
-let TASKS=[],TESTS={},P={},cur=null,ed=null,loading=false,pend=null,seq=0,W=null,ready=null;
-const F={q:'',d:new Set(['Easy','Medium','Hard']),s:'all',auto:false},OPEN=new Set();
-
+const ST={new:['○','Не начата'],in_progress:['◐','В процессе'],solved:['●','Решена'],review:['↻','На повтор']};
+const CYC=['new','in_progress','solved','review'],RANK={Easy:0,Medium:1,Hard:2};
+let TASKS=[],TESTS={},P={},cur=null,ed=null,loading=false,pend=null,seq=0,W=null,ready=null,flat=[];
+const F={q:'',d:new Set(),t:new Set(),s:'all',y:false,auto:false,sort:'rank'};
 /* ---------- Python worker (Pyodide) ---------- */
 function workerMain(){
  let py;
@@ -163,85 +196,76 @@ function exec(code,tests,unordered){
  });
 }
 
+
 /* ---------- progress ---------- */
 const saveP=()=>LS.set('yit-progress',JSON.stringify(P));
+const stOf=t=>(P[t.id]||{}).status||'new';
 function upd(id,patch){
  const b=P[id]||{},nb={status:'new',attempts:0,passed:0,last_run:null,code:'',...b,...patch};
- const changed=nb.status!==(b.status||'new')||nb.attempts!==(b.attempts||0)||nb.passed!==(b.passed||0);
+ const ch=nb.status!==(b.status||'new')||nb.attempts!==(b.attempts||0)||nb.passed!==(b.passed||0);
  P[id]=nb;saveP();renderStats();
- if(changed){renderList();if(cur&&cur.id===id)renderMeta()}
+ if(ch)$('v-task').hidden?renderAll():renderTask();
 }
 function flush(){if(pend){clearTimeout(pend.tm);const p=P[pend.id]||{};upd(pend.id,{code:pend.code,status:(p.status||'new')==='new'?'in_progress':p.status});pend=null}}
 const starter=t=>{const c=(t.contract||(TESTS[t.title]||{}).contract||'').trim();const h=/^def /.test(c)?c.replace(/:\s*$/,''):/^solve\(/.test(c)?'def '+c:'def solve(*args)';return h+':\n    pass\n'};
-
-/* ---------- rendering ---------- */
 function md(s){
  return String(s).split('```').map((p,i)=>i%2?`<pre class="code">${esc(p.replace(/^[\w+-]*\n/,''))}</pre>`:
   esc(p).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').split(/\n{2,}/).filter(b=>b.trim()).map(b=>`<p>${b.replace(/\n/g,'<br>')}</p>`).join('')).join('');
 }
-function renderStats(){
- const s=t=>(P[t.id]||{}).status,N=TASKS.length,sv=TASKS.filter(t=>s(t)==='solved').length;
- const med=TASKS.filter(t=>t.difficulty==='Medium'),ms=med.filter(t=>s(t)==='solved').length,tr=TASKS.filter(t=>(P[t.id]||{}).attempts>0).length;
- $('stats').innerHTML=`<b>Решено ${sv}/${N}</b><div class="pb"><i style="width:${sv/Math.max(1,N)*100}%"></i></div><span>Medium: <b>${ms}/${med.length}</b></span><span>Попробовано: <b>${tr}</b></span>`;
-}
+
+/* ---------- list page ---------- */
+const rk=t=>t.source==='Yandex'?0:(t.yandex_rank||1000+TASKS.indexOf(t));
 function view(){
- return TASKS.filter(t=>{
-  const s=(P[t.id]||{}).status||'new';
-  if(!F.d.has(t.difficulty))return false;
-  if(F.s==='unsolved'&&s==='solved')return false;
-  if(F.s==='review'&&s!=='review')return false;
+ const v=TASKS.filter(t=>{
+  const s=stOf(t);
+  if(F.d.size&&!F.d.has(t.difficulty))return false;
+  if(F.t.size&&!F.t.has(t.topic))return false;
+  if(F.s==='unsolved'?s==='solved':F.s!=='all'&&s!==F.s)return false;
+  if(F.y&&!(t.yandex_rank||t.source==='Yandex'))return false;
   if(F.auto&&!t.auto_tests)return false;
   return !F.q||(t.title+' '+t.topic).toLowerCase().includes(F.q);
  });
+ const C={rank:(a,b)=>rk(a)-rk(b),diff:(a,b)=>RANK[a.difficulty]-RANK[b.difficulty]||rk(a)-rk(b),title:(a,b)=>a.title.localeCompare(b.title),topic:(a,b)=>a.topic.localeCompare(b.topic)||RANK[a.difficulty]-RANK[b.difficulty]};
+ return v.sort(C[F.sort]);
 }
-function groups(v){
- const m=new Map();TASKS.forEach(t=>{if(!m.has(t.topic))m.set(t.topic,[])});
- v.forEach(t=>m.get(t.topic).push(t));
- return [...m].filter(([,a])=>a.length).map(([k,a])=>[k,a.slice().sort((x,y)=>RANK[x.difficulty]-RANK[y.difficulty])]);
+function renderStats(){
+ const N=TASKS.length,sv=TASKS.filter(t=>stOf(t)==='solved').length;
+ $('hstats').innerHTML=`<span>Решено <b>${sv}/${N}</b></span><div class="pb"><i style="width:${sv/Math.max(1,N)*100}%"></i></div>`;
 }
-let flat=[];
-function renderList(){
- const v=view(),g=groups(v),search=F.q||F.s!=='all'||F.auto;
- flat=g.flatMap(([,a])=>a);
- $('cnt').textContent=`Найдено: ${v.length} из ${TASKS.length}`;
- $('list').innerHTML=g.map(([k,a])=>{
-  const sv=a.filter(t=>(P[t.id]||{}).status==='solved').length;
-  const open=search||OPEN.has(k)||(cur&&cur.topic===k);
-  return `<details data-k="${esc(k)}" ${open?'open':''}><summary><span>${esc(k)}</span><span>${sv}/${a.length}</span></summary>`+
-   a.map(t=>{const s=(P[t.id]||{}).status||'new';
-    return `<div class="item s-${s} ${cur&&cur.id===t.id?'on':''}" data-id="${t.id}" title="${ST[s][1]}"><span class="ic">${ST[s][0]}</span><span class="t">${esc(t.title)}</span><span class="b ${t.difficulty}">${t.difficulty}</span></div>`}).join('')+`</details>`;
- }).join('')||'<div class="muted">По фильтрам ничего нет.</div>';
- $('list').querySelectorAll('details').forEach(d=>d.addEventListener('toggle',()=>{d.open?OPEN.add(d.dataset.k):OPEN.delete(d.dataset.k)}));
-}
-function renderMeta(){
- const t=cur,p=P[t.id]||{},s=p.status||'new';
- $('info').innerHTML=`<div class="row"><button data-a="prev">← Пред.</button><button data-a="next">След. →</button><button data-a="rnd">🎲 Случайная нерешённая</button></div>
- <h2>${esc(t.title)}</h2>
- <div class="row"><span class="b ${t.difficulty}">${t.difficulty}</span><span class="tag">${esc(t.topic)}</span>${t.source?`<span class="tag">${esc(t.source)}</span>`:''}${t.auto_tests?'<span class="tag ok">автотесты</span>':''}</div>
- <div class="row">${t.url?`<a class="btn" href="${esc(t.url)}" target="_blank" rel="noopener">Открыть оригинал ↗</a>`:''}<select id="sel">${Object.entries(ST).map(([k,v])=>`<option value="${k}" ${k===s?'selected':''}>${v[0]} ${v[1]}</option>`).join('')}</select></div>
- <h3>Условие</h3>
- <div class="desc">${t.description?md(t.description):'<p class="muted">Описание для этой задачи пока не добавлено — добавьте поле <code>description</code> в tasks.json. Полное условие — по кнопке «Открыть оригинал».</p>'}</div>
- ${t.contract?`<h3>Контракт</h3><pre class="code">${esc(t.contract)}</pre><div class="sub">Реализуйте функцию <code>solve(...)</code>.</div>`:''}
- <div class="sub" style="margin-top:10px">Попыток: ${p.attempts||0} · успешных прогонов: ${p.passed||0}</div>`;
-}
-function select(id){
- flush();
- cur=TASKS.find(t=>t.id===id)||TASKS[0];
- LS.set('yit-cur',cur.id);history.replaceState(null,'','#'+cur.id);
- renderMeta();loadCode();$('res').innerHTML='';renderList();
- const a=document.querySelector('.item.on');if(a)a.scrollIntoView({block:'nearest'});
-}
-function loadCode(){loading=true;ed.setValue((P[cur.id]||{}).code||starter(cur),-1);ed.session.getUndoManager().reset();loading=false}
-function go(d){
- if(!flat.length)return;
- const i=flat.findIndex(t=>t.id===cur.id);
- select(flat[(i+d+flat.length)%flat.length].id);
-}
-function rnd(){
- const c=flat.filter(t=>t.id!==cur.id&&(P[t.id]||{}).status!=='solved');
- if(c.length)select(c[Math.floor(Math.random()*c.length)].id);
+function renderAll(){
+ const N=TASKS.length,sv=t=>stOf(t)==='solved';
+ $('lead').textContent=`${N} задач · ${TASKS.filter(t=>t.yandex_rank).length} из подборки Yandex · ${TASKS.filter(t=>t.auto_tests).length} с автотестами · решено ${TASKS.filter(sv).length}`;
+ $('dist').innerHTML=['Easy','Medium','Hard'].map(d=>{const a=TASKS.filter(t=>t.difficulty===d),s=a.filter(sv).length;
+  return `<div class="card ${d} ${F.d.has(d)?'on':''}" data-d="${d}"><div class="cl">${d}</div><div class="cn">${a.length}<small>${Math.round(a.length/N*100)}%</small></div><div class="pb"><i style="width:${s/Math.max(1,a.length)*100}%"></i></div><div class="cs">Решено ${s} из ${a.length}</div></div>`}).join('');
+ const tc=new Map();TASKS.forEach(t=>{const a=tc.get(t.topic)||[0,0];a[0]++;if(sv(t))a[1]++;tc.set(t.topic,a)});
+ $('topics').innerHTML=[...tc].sort((a,b)=>b[1][0]-a[1][0]).map(([k,[n,s]])=>`<button class="chip ${F.t.has(k)?'on':''}" data-t="${esc(k)}">${esc(k)}<b>${n}</b>${s?`<small>${s}✓</small>`:''}</button>`).join('');
+ flat=view();
+ $('rows').innerHTML=flat.map(t=>{const s=stOf(t);
+  return `<tr data-id="${t.id}" class="s-${s} ${cur&&cur.id===t.id?'last':''}"><td class="c-st" data-st="${t.id}" title="${ST[s][1]} (клик — сменить)">${ST[s][0]}</td><td class="c-n">${t.yandex_rank||(t.source==='Yandex'?'★':'—')}</td><td>${esc(t.title)}${t.auto_tests?'<span class="tg">⚡ тесты</span>':''}</td><td class="c-tp">${esc(t.topic)}</td><td><span class="b ${t.difficulty}">${t.difficulty}</span></td></tr>`}).join('')||'<tr><td colspan="5" class="muted">По фильтрам ничего нет.</td></tr>';
+ $('cnt').textContent=`Показано ${flat.length} из ${N}`;
 }
 
+/* ---------- task page ---------- */
+function renderTask(){
+ const t=cur,p=P[t.id]||{},i=flat.findIndex(x=>x.id===t.id);
+ $('thead').innerHTML=`<h2>${esc(t.title)}</h2><span class="b ${t.difficulty}">${t.difficulty}</span>${t.yandex_rank?`<span class="tag y">Yandex #${t.yandex_rank}</span>`:t.source==='Yandex'?'<span class="tag y">★ контест Яндекса</span>':''}<span class="tag">${esc(t.topic)}</span>${t.auto_tests?'<span class="tag ok">⚡ автотесты</span>':''}`;
+ $('sel').value=stOf(t);$('pos').textContent=i>=0?`${i+1} / ${flat.length}`:'';
+ $('tinfo').innerHTML=`<h3>Условие</h3><div class="desc">${t.description?md(t.description):'<p class="muted">Описание пока не добавлено. Полное условие — по ссылке на оригинал.</p>'}</div>
+ ${t.contract?`<h3>Контракт</h3><pre class="code">${esc(t.contract)}</pre><div class="sub">Реализуйте функцию <code>solve(...)</code>.</div>`:''}
+ <div class="bar">${t.url?`<a class="btn" href="${esc(t.url)}" target="_blank" rel="noopener">Открыть оригинал ↗</a>`:''}</div>
+ <div class="sub">Попыток: ${p.attempts||0} · успешных прогонов: ${p.passed||0}</div>`;
+}
+function loadCode(){loading=true;ed.setValue((P[cur.id]||{}).code||starter(cur),-1);ed.session.getUndoManager().reset();loading=false}
+function goto(id){location.hash='#/t/'+id}
+function go(d){
+ flat=view();if(!flat.length)return;
+ const i=flat.findIndex(x=>x.id===cur.id);
+ goto(flat[i<0?(d>0?0:flat.length-1):(i+d+flat.length)%flat.length].id);
+}
+function rnd(){
+ const c=view().filter(x=>(!cur||x.id!==cur.id)&&stOf(x)!=='solved');
+ if(c.length)goto(c[Math.floor(Math.random()*c.length)].id);
+}
 /* ---------- run ---------- */
 const box=h=>{$('res').innerHTML=h};
 async function run(){
@@ -272,12 +296,22 @@ async function run(){
  finally{$('run').disabled=false}
 }
 
-/* ---------- boot ---------- */
+
+/* ---------- routing / boot ---------- */
+function route(){
+ flush();
+ const m=location.hash.match(/^#(?:\/t\/)?(\d+)$/),t=m&&TASKS.find(x=>x.id===+m[1]);
+ if(t){
+  cur=t;LS.set('yit-cur',t.id);flat=view();
+  $('v-list').hidden=true;$('v-task').hidden=false;
+  renderTask();loadCode();$('res').innerHTML='';ed.resize(true);window.scrollTo(0,0);
+ }else{$('v-task').hidden=true;$('v-list').hidden=false;renderAll()}
+}
 async function boot(){
  try{
   const [a,b]=await Promise.all([fetch('tasks.json').then(r=>r.json()),fetch('tests.json').then(r=>r.json())]);
   TASKS=a.tasks;TESTS=b;
- }catch(e){$('info').innerHTML='<div class="r no">Не удалось загрузить tasks.json / tests.json. Локально откройте сайт через <code>python -m http.server</code>, а не как файл.</div>';return}
+ }catch(e){$('lead').innerHTML='<span style="color:var(--bad)">Не удалось загрузить tasks.json / tests.json. Локально откройте сайт через <code>python -m http.server</code>, а не как файл.</span>';return}
  try{P=JSON.parse(LS.get('yit-progress')||'{}')}catch(e){P={}}
  ed=ace.edit('editor',{mode:'ace/mode/python',theme:'ace/theme/tomorrow_night',tabSize:4,useSoftTabs:true,showPrintMargin:false,fontSize:15,wrap:true,enableBasicAutocompletion:false,enableLiveAutocompletion:false,enableSnippets:false,showGutter:true});
  ed.commands.addCommand({name:'run',bindKey:{win:'Ctrl-Enter',mac:'Command-Enter'},exec:run});
@@ -287,22 +321,25 @@ async function boot(){
   const id=cur.id,code=ed.getValue();
   pend={id,code,tm:setTimeout(flush,600)};
  });
- spawn();
- const h=parseInt(location.hash.slice(1)),saved=parseInt(LS.get('yit-cur'));
- renderStats();renderList();
- select([h,saved].find(x=>TASKS.some(t=>t.id===x))??TASKS[0].id);
+ $('sel').innerHTML=CYC.map(k=>`<option value="${k}">${ST[k][0]} ${ST[k][1]}</option>`).join('');
+ spawn();renderStats();
+ window.addEventListener('hashchange',route);route();
 }
-$('q').oninput=e=>{F.q=e.target.value.toLowerCase().trim();renderList()};
-$('cd').onclick=e=>{const d=e.target.dataset.d;if(!d)return;F.d.has(d)?F.d.delete(d):F.d.add(d);e.target.classList.toggle('on');renderList()};
-$('cs').onclick=e=>{
- const s=e.target.dataset.s;
- if(s){F.s=s;$('cs').querySelectorAll('[data-s]').forEach(b=>b.classList.toggle('on',b.dataset.s===s))}
- else if(e.target.dataset.x){F.auto=!F.auto;e.target.classList.toggle('on',F.auto)}else return;
- renderList();
+$('dist').onclick=e=>{const c=e.target.closest('[data-d]');if(!c)return;const d=c.dataset.d;F.d.has(d)?F.d.delete(d):F.d.add(d);renderAll()};
+$('topics').onclick=e=>{const c=e.target.closest('[data-t]');if(!c)return;const d=c.dataset.t;F.t.has(d)?F.t.delete(d):F.t.add(d);renderAll()};
+$('q').oninput=e=>{F.q=e.target.value.toLowerCase().trim();renderAll()};
+$('fs').onchange=e=>{F.s=e.target.value;renderAll()};
+$('so').onchange=e=>{F.sort=e.target.value;renderAll()};
+$('fy').onchange=e=>{F.y=e.target.checked;renderAll()};
+$('fa').onchange=e=>{F.auto=e.target.checked;renderAll()};
+$('rndl').onclick=rnd;
+$('rows').onclick=e=>{
+ const c=e.target.closest('[data-st]');
+ if(c){const t=TASKS.find(x=>x.id===+c.dataset.st);upd(t.id,{status:CYC[(CYC.indexOf(stOf(t))+1)%CYC.length]});return}
+ const r=e.target.closest('tr[data-id]');if(r)goto(+r.dataset.id);
 };
-$('list').onclick=e=>{const it=e.target.closest('.item');if(it)select(+it.dataset.id)};
-$('info').onclick=e=>{const a=e.target.dataset.a;if(a==='prev')go(-1);else if(a==='next')go(1);else if(a==='rnd')rnd()};
-$('info').onchange=e=>{if(e.target.id==='sel')upd(cur.id,{status:e.target.value})};
+$('v-task').querySelector('.tbar').onclick=e=>{const a=e.target.dataset.a;if(a==='back')location.hash='#/';else if(a==='prev')go(-1);else if(a==='next')go(1);else if(a==='rnd')rnd()};
+$('sel').onchange=e=>upd(cur.id,{status:e.target.value});
 $('run').onclick=run;
 $('save').onclick=()=>{flush();const p=P[cur.id]||{};upd(cur.id,{code:ed.getValue(),status:(p.status||'new')==='new'?'in_progress':p.status});box('<div class="r ok">Сохранено.</div>')};
 $('solved').onclick=()=>{upd(cur.id,{code:ed.getValue(),status:'solved'});box('<div class="r ok">Задача отмечена как решённая.</div>')};
@@ -310,13 +347,12 @@ $('reset').onclick=()=>{if(confirm('Сбросить код этой задач�
 $('exp').onclick=()=>{flush();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(P,null,1)],{type:'application/json'}));a.download='progress.json';a.click()};
 $('imp').onchange=async e=>{
  const f=e.target.files[0];if(!f)return;
- try{const o=JSON.parse(await f.text());for(const k in o)P[k]={status:'new',attempts:0,passed:0,last_run:null,code:'',...o[k]};saveP();renderStats();renderList();renderMeta();loadCode();box('<div class="r ok">Прогресс импортирован.</div>')}
- catch(err){box('<div class="r no">Не удалось прочитать файл прогресса.</div>')}
+ try{const o=JSON.parse(await f.text());for(const k in o)P[k]={status:'new',attempts:0,passed:0,last_run:null,code:'',...o[k]};saveP();renderStats();$('v-task').hidden?renderAll():(renderTask(),loadCode());alert('Прогресс импортирован.')}
+ catch(err){alert('Не удалось прочитать файл прогресса.')}
  e.target.value='';
 };
-window.addEventListener('hashchange',()=>{const id=parseInt(location.hash.slice(1));if(cur&&id!==cur.id&&TASKS.some(t=>t.id===id))select(id)});
 document.addEventListener('keydown',e=>{
- if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;
+ if($('v-task').hidden||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;
  if(e.key==='j')go(1);else if(e.key==='k')go(-1);
 });
 window.addEventListener('beforeunload',flush);

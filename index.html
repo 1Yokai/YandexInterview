@@ -360,4 +360,130 @@ $('tinfo').addEventListener('click',e=>{
   }
  }else if(a==='sol-copy'){
   const sol=SOLUTIONS[cur.title];if(!sol)return;
-  navigator.clipboard.writeText(sol).then(()=>{const btn=e.target;const old=btn.textContent;btn
+  navigator.clipboard.writeText(sol).then(()=>{const btn=e.target;const old=btn.textContent;btn.textContent='Скопировано ✓';setTimeout(()=>btn.textContent=old,1200);},()=>alert('Не удалось скопировать'));
+ }
+});
+
+/* ---------- run ---------- */
+const box=h=>{$('res').innerHTML=h};
+async function run(){
+ flush();
+ const t=cur,code=ed.getValue(),p=P[t.id]||{},spec=TESTS[t.title];
+ upd(t.id,{code,attempts:(p.attempts||0)+1,status:(p.status||'new')==='new'?'in_progress':p.status,last_run:Date.now()/1000});
+ if(!spec){box('<div class="r wn">Для этой задачи автотесты пока не заведены. Используйте оригинальный judge.</div>');return}
+ $('run').disabled=true;box('<div class="r in">Выполняется…</div>');
+ try{
+  const r=await exec(code,spec.tests,spec.unordered);
+  if(r.timeout){box('<div class="r no">Превышен лимит 4 секунды.</div>');return}
+  if(r.err){box(`<div class="r no">${esc(r.err)}</div>`);return}
+  const o=JSON.parse(r.out);let h='';
+  if(o.fatal)h+=`<div class="r no">${esc(o.fatal)}</div>`;
+  let ok=0;
+  o.res.forEach(x=>{
+   if(x.ok){ok++;h+=`<div class="r ok">Тест ${x.i}: OK</div>`}
+   else h+=`<div class="r no">Тест ${x.i}: ${x.error?esc(x.error):`ожидалось ${esc(x.expected)}, получено ${esc(x.got)}`}\nвход: ${esc(x.args)}</div>`;
+  });
+  if(o.out)h+=`<div class="r in">Вывод:\n${esc(o.out)}</div>`;
+  if(!o.fatal){
+   const all=ok===o.res.length&&o.res.length>0;
+   h=`<div class="r ${all?'ok':'wn'}"><b>${all?'Все тесты пройдены.':`Пройдено: ${ok}/${o.res.length}`}</b></div>`+h;
+   if(all){
+    const total=totalSec(t);
+    if(total>=LIMIT_SEC){
+     upd(t.id,{status:'review',passed:(P[t.id].passed||0)+1});
+     h='<div class="r wn"><b>Все тесты пройдены, но задача заняла больше 30 минут — отправлена на повтор.</b></div>'+h;
+    }else{
+     upd(t.id,{status:'solved',passed:(P[t.id].passed||0)+1});
+     h='<div class="r ok"><b>Все тесты пройдены — задача отмечена решённой.</b></div>'+h;
+    }
+   }
+  }
+  box(h);
+ }catch(e){box(`<div class="r no">Не удалось запустить Python: ${esc(e.message)}. Проверьте соединение и обновите страницу.</div>`)}
+ finally{$('run').disabled=false}
+}
+
+/* ---------- routing / boot ---------- */
+function route(){
+ flush();
+ commitSession();
+ const m=location.hash.match(/^#(?:\/t\/)?(\d+)$/),t=m&&TASKS.find(x=>x.id===+m[1]);
+ if(t){
+  cur=t;LS.set('yit-cur',t.id);flat=view();
+  $('v-list').hidden=true;$('v-task').hidden=false;
+  renderTask();loadCode();$('res').innerHTML='';ed.resize(true);window.scrollTo(0,0);
+  startTimer();
+ }else{
+  cur=null;stopTimer();
+  $('v-task').hidden=true;$('v-list').hidden=false;renderAll()
+ }
+}
+async function boot(){
+ try{
+  const [a,b,c]=await Promise.all([
+   fetch('tasks.json').then(r=>r.json()),
+   fetch('tests.json').then(r=>r.json()),
+   fetch('solutions.json').then(r=>r.json()).catch(()=>({}))
+  ]);
+  TASKS=a.tasks;TESTS=b||{};SOLUTIONS=c||{};
+ }catch(e){$('lead').innerHTML='<span style="color:var(--bad)">Не удалось загрузить tasks.json / tests.json. Локально откройте сайт через <code>python -m http.server</code>, а не как файл.</span>';return}
+ try{P=JSON.parse(LS.get('yit-progress')||'{}')}catch(e){P={}}
+ ed=ace.edit('editor',{mode:'ace/mode/python',theme:'ace/theme/tomorrow_night',tabSize:4,useSoftTabs:true,showPrintMargin:false,fontSize:15,wrap:true,enableBasicAutocompletion:false,enableLiveAutocompletion:false,enableSnippets:false,showGutter:true});
+ ed.commands.addCommand({name:'run',bindKey:{win:'Ctrl-Enter',mac:'Command-Enter'},exec:run});
+ ed.session.on('change',()=>{
+  if(loading)return;
+  if(pend)clearTimeout(pend.tm);
+  const id=cur.id,code=ed.getValue();
+  pend={id,code,tm:setTimeout(flush,600)};
+ });
+ $('sel').innerHTML=CYC.map(k=>`<option value="${k}">${ST[k][0]} ${ST[k][1]}</option>`).join('');
+ spawn();renderStats();
+ window.addEventListener('hashchange',route);route();
+}
+$('dist').onclick=e=>{const c=e.target.closest('[data-d]');if(!c)return;const d=c.dataset.d;F.d.has(d)?F.d.delete(d):F.d.add(d);renderAll()};
+$('topics').onclick=e=>{const c=e.target.closest('[data-t]');if(!c)return;const d=c.dataset.t;F.t.has(d)?F.t.delete(d):F.t.add(d);renderAll()};
+$('q').oninput=e=>{F.q=e.target.value.toLowerCase().trim();renderAll()};
+$('fs').onchange=e=>{F.s=e.target.value;renderAll()};
+$('so').onchange=e=>{F.sort=e.target.value;renderAll()};
+$('fy').onchange=e=>{F.y=e.target.checked;renderAll()};
+$('fa').onchange=e=>{F.auto=e.target.checked;renderAll()};
+$('rndl').onclick=rnd;
+$('rows').onclick=e=>{
+ const c=e.target.closest('[data-st]');
+ if(c){const t=TASKS.find(x=>x.id===+c.dataset.st);upd(t.id,{status:CYC[(CYC.indexOf(stOf(t))+1)%CYC.length]});return}
+ const r=e.target.closest('tr[data-id]');if(r)goto(+r.dataset.id);
+};
+$('v-task').querySelector('.tbar').onclick=e=>{const a=e.target.dataset.a;if(a==='back')location.hash='#/';else if(a==='prev')go(-1);else if(a==='next')go(1);else if(a==='rnd')rnd()};
+$('sel').onchange=e=>upd(cur.id,{status:e.target.value});
+$('run').onclick=run;
+$('save').onclick=()=>{flush();const p=P[cur.id]||{};upd(cur.id,{code:ed.getValue(),status:(p.status||'new')==='new'?'in_progress':p.status});box('<div class="r ok">Сохранено.</div>')};
+$('solved').onclick=()=>{
+ const total=totalSec(cur);
+ if(total>=LIMIT_SEC){
+  upd(cur.id,{code:ed.getValue(),status:'review'});
+  box('<div class="r wn">Задача заняла больше 30 минут — отправлена на повтор.</div>');
+ }else{
+  upd(cur.id,{code:ed.getValue(),status:'solved'});
+  box('<div class="r ok">Задача отмечена как решённая.</div>');
+ }
+};
+$('reset').onclick=()=>{if(confirm('Сбросить код этой задачи к шаблону?')){pend=null;upd(cur.id,{code:''});loadCode()}};
+$('exp').onclick=()=>{flush();commitSession();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(P,null,1)],{type:'application/json'}));a.download='progress.json';a.click()};
+$('imp').onchange=async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{
+  const o=JSON.parse(await f.text());
+  for(const k in o)P[k]={status:'new',attempts:0,passed:0,last_run:null,code:'',time_spent:0,...o[k]};
+  saveP();renderStats();$('v-task').hidden?renderAll():(renderTask(),loadCode());alert('Прогресс импортирован.')
+ }catch(err){alert('Не удалось прочитать файл прогресса.')}
+ e.target.value='';
+};
+document.addEventListener('keydown',e=>{
+ if($('v-task').hidden||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;
+ if(e.key==='j')go(1);else if(e.key==='k')go(-1);
+});
+window.addEventListener('beforeunload',()=>{flush();commitSession();});
+boot();
+</script>
+</body>
+</html>

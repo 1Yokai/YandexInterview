@@ -39,9 +39,10 @@ tbody tr{cursor:pointer}tbody tr:hover{background:var(--hov)}tbody tr.last{backg
 .tg{font-size:11px;color:var(--ok);border:1px solid #1d4d2e;border-radius:99px;padding:0 7px;margin-left:6px;white-space:nowrap}
 .tag{font-size:12px;color:var(--muted);border:1px solid var(--bd);border-radius:99px;padding:1px 9px}.tag.ok{color:var(--ok)}.tag.y{color:var(--acc);border-color:#5a4a10}
 .cnt{margin-top:10px;font-size:13px;color:var(--muted)}
-/* task page */
 .tbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px 24px;border-bottom:1px solid var(--bd)}
 #thead{display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex:1;min-width:260px}#thead h2{font-size:18px;margin:0 6px 0 4px}
+#timer{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:var(--muted);padding:4px 8px;border:1px solid var(--bd);border-radius:8px;background:var(--panel)}
+#timer.over{color:var(--bad);border-color:#5a1a1a;background:rgba(248,113,113,.08)}
 .split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:12px;padding:12px 24px}
 .panel{background:var(--panel);border:1px solid var(--bd);border-radius:12px;padding:14px}
 #tinfo{max-height:calc(100vh - 140px);overflow:auto;position:sticky;top:64px}
@@ -52,27 +53,17 @@ pre.code{padding:10px;overflow:auto;margin:6px 0;border:1px solid var(--bd)}.mut
 .bar{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
 .r{padding:6px 10px;border-radius:8px;margin:4px 0;font-size:13px;font-family:ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
 .r.ok{background:rgba(74,222,128,.1);color:var(--ok)}.r.no{background:rgba(248,113,113,.1);color:var(--bad)}.r.wn{background:rgba(251,191,36,.1);color:var(--warn)}.r.in{background:#0a0a0b;color:var(--muted)}
-/* details blocks */
 .examples{margin:6px 0 10px}
 .example{background:#0a0a0b;border:1px solid var(--bd);border-radius:8px;padding:8px 10px;margin:6px 0;font-size:13px}
 .example .ex-row{margin:2px 0;font-family:ui-monospace,Menlo,Consolas,monospace}
 .example .ex-row b{color:var(--muted);font-family:inherit;font-weight:600;margin-right:6px}
 .example .ex-row code{background:#17171a;padding:1px 5px;border-radius:4px;color:var(--text)}
 .example .ex-exp{color:var(--muted);font-family:inherit;margin-top:4px}
-.idea{margin-top:6px}
-.idea>summary{cursor:pointer;color:var(--acc);font-size:13px;user-select:none}
-.idea>summary:hover{text-decoration:underline}
-.idea p{margin:6px 0 0;color:var(--text)}
-.det-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
-.det-tags .tag{font-size:11px;background:#17171a;border-color:#2a2a30}
-.io-block{margin:6px 0;font-size:13px;color:var(--text)}
-.io-block b{color:var(--muted);font-weight:600;margin-right:4px}
-/* solution block */
-.solution{margin-top:6px}
-.solution>summary{cursor:pointer;color:var(--ok);font-size:13px;user-select:none}
-.solution>summary:hover{text-decoration:underline}
-.solution .sol-bar{display:flex;gap:8px;margin:8px 0 4px}
-.solution .sol-bar button{font-size:12px;padding:4px 10px}
+.idea{margin-top:6px}.idea>summary{cursor:pointer;color:var(--acc);font-size:13px;user-select:none}.idea>summary:hover{text-decoration:underline}.idea p{margin:6px 0 0;color:var(--text)}
+.det-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.det-tags .tag{font-size:11px;background:#17171a;border-color:#2a2a30}
+.io-block{margin:6px 0;font-size:13px}.io-block b{color:var(--muted);font-weight:600;margin-right:4px}
+.solution{margin-top:6px}.solution>summary{cursor:pointer;color:var(--ok);font-size:13px;user-select:none}.solution>summary:hover{text-decoration:underline}
+.solution .sol-bar{display:flex;gap:8px;margin:8px 0 4px}.solution .sol-bar button{font-size:12px;padding:4px 10px}
 @media(max-width:900px){.split{grid-template-columns:1fr;padding:12px}#tinfo{position:static;max-height:none}.dist{grid-template-columns:1fr}.c-tp{display:none}.wrap{padding:16px}.top,.tbar{padding:10px 16px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.32.9/src-min-noconflict/ace.js"></script>
@@ -112,6 +103,7 @@ pre.code{padding:10px;overflow:auto;margin:6px 0;border:1px solid var(--bd)}.mut
 <div class="tbar">
 <button data-a="back">← К списку</button><button data-a="prev">‹</button><span class="sub" id="pos"></span><button data-a="next">›</button><button data-a="rnd" title="Случайная нерешённая">🎲</button>
 <div id="thead"></div>
+<span id="timer" title="Время на задачу (лимит 30 минут)">⏱ 00:00</span>
 <select id="sel"></select>
 </div>
 <div class="split">
@@ -126,7 +118,7 @@ pre.code{padding:10px;overflow:auto;margin:6px 0;border:1px solid var(--bd)}.mut
 <span class="sub" id="py">Python: загрузка…</span>
 </div>
 <div id="res"></div>
-<div class="sub">Ctrl/⌘+Enter — запуск · j / k — следующая / предыдущая задача (вне редактора)</div>
+<div class="sub">Ctrl/⌘+Enter — запуск · j / k — следующая / предыдущая задача (вне редактора) · лимит 30 мин → задача уходит на повтор</div>
 </div>
 </div>
 </section>
@@ -181,10 +173,12 @@ const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 const LS={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 const ST={new:['○','Не начата'],in_progress:['◐','В процессе'],solved:['●','Решена'],review:['↻','На повтор']};
 const CYC=['new','in_progress','solved','review'],RANK={Easy:0,Medium:1,Hard:2};
+const LIMIT_SEC=30*60;
 let TASKS=[],TESTS={},SOLUTIONS={},P={},cur=null,ed=null,loading=false,pend=null,seq=0,W=null,ready=null,flat=[];
+let sessionStart=0,timerInt=null;
 const F={q:'',d:new Set(),t:new Set(),s:'all',y:false,auto:false,sort:'rank'};
 
-/* ---------- Python worker (Pyodide) ---------- */
+/* ---------- Python worker ---------- */
 function workerMain(){
  let py;
  onmessage=async e=>{
@@ -222,7 +216,7 @@ function exec(code,tests,unordered){
 const saveP=()=>LS.set('yit-progress',JSON.stringify(P));
 const stOf=t=>(P[t.id]||{}).status||'new';
 function upd(id,patch){
- const b=P[id]||{},nb={status:'new',attempts:0,passed:0,last_run:null,code:'',...b,...patch};
+ const b=P[id]||{},nb={status:'new',attempts:0,passed:0,last_run:null,code:'',time_spent:0,...b,...patch};
  const ch=nb.status!==(b.status||'new')||nb.attempts!==(b.attempts||0)||nb.passed!==(b.passed||0);
  P[id]=nb;saveP();renderStats();
  if(ch)$('v-task').hidden?renderAll():renderTask();
@@ -234,6 +228,35 @@ function md(s){
   esc(p).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').split(/\n{2,}/).filter(b=>b.trim()).map(b=>`<p>${b.replace(/\n/g,'<br>')}</p>`).join('')).join('');
 }
 
+/* ---------- timer ---------- */
+function fmtTime(s){
+ s=Math.max(0,Math.floor(s));
+ const m=Math.floor(s/60),sec=s%60;
+ return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+function currentSessionSec(){return sessionStart?Math.floor((Date.now()-sessionStart)/1000):0;}
+function totalSec(t){const p=P[t.id]||{};return (p.time_spent||0)+currentSessionSec();}
+function updateTimer(){
+ if(!cur)return;
+ const el=$('timer');if(!el)return;
+ const s=totalSec(cur);
+ el.textContent='⏱ '+fmtTime(s);
+ el.classList.toggle('over',s>=LIMIT_SEC);
+}
+function startTimer(){
+ sessionStart=Date.now();
+ if(timerInt)clearInterval(timerInt);
+ updateTimer();
+ timerInt=setInterval(updateTimer,1000);
+}
+function stopTimer(){if(timerInt){clearInterval(timerInt);timerInt=null;}}
+function commitSession(){
+ if(!cur||!sessionStart)return;
+ const s=currentSessionSec();
+ if(s>0){const p=P[cur.id]||{};upd(cur.id,{time_spent:(p.time_spent||0)+s});}
+ sessionStart=0;
+}
+
 /* ---------- list page ---------- */
 const rk=t=>t.source==='Yandex'?0:(t.yandex_rank||1000+TASKS.indexOf(t));
 function view(){
@@ -243,7 +266,7 @@ function view(){
   if(F.t.size&&!F.t.has(t.topic))return false;
   if(F.s==='unsolved'?s==='solved':F.s!=='all'&&s!==F.s)return false;
   if(F.y&&!(t.yandex_rank||t.source==='Yandex'))return false;
-  if(F.auto&&!t.auto_tests)return false;
+  if(F.auto&&!TESTS[t.title])return false;
   return !F.q||(t.title+' '+t.topic).toLowerCase().includes(F.q);
  });
  const C={rank:(a,b)=>rk(a)-rk(b),diff:(a,b)=>RANK[a.difficulty]-RANK[b.difficulty]||rk(a)-rk(b),title:(a,b)=>a.title.localeCompare(b.title),topic:(a,b)=>a.topic.localeCompare(b.topic)||RANK[a.difficulty]-RANK[b.difficulty]};
@@ -254,15 +277,15 @@ function renderStats(){
  $('hstats').innerHTML=`<span>Решено <b>${sv}/${N}</b></span><div class="pb"><i style="width:${sv/Math.max(1,N)*100}%"></i></div>`;
 }
 function renderAll(){
- const N=TASKS.length,sv=t=>stOf(t)==='solved';
- $('lead').textContent=`${N} задач · ${TASKS.filter(t=>t.yandex_rank).length} из подборки Yandex · ${TASKS.filter(t=>t.auto_tests).length} с автотестами · решено ${TASKS.filter(sv).length}`;
+ const N=TASKS.length,sv=t=>stOf(t)==='solved',auto=t=>!!TESTS[t.title];
+ $('lead').textContent=`${N} задач · ${TASKS.filter(t=>t.yandex_rank).length} из подборки Yandex · ${TASKS.filter(auto).length} с автотестами · решено ${TASKS.filter(sv).length}`;
  $('dist').innerHTML=['Easy','Medium','Hard'].map(d=>{const a=TASKS.filter(t=>t.difficulty===d),s=a.filter(sv).length;
   return `<div class="card ${d} ${F.d.has(d)?'on':''}" data-d="${d}"><div class="cl">${d}</div><div class="cn">${a.length}<small>${Math.round(a.length/N*100)}%</small></div><div class="pb"><i style="width:${s/Math.max(1,a.length)*100}%"></i></div><div class="cs">Решено ${s} из ${a.length}</div></div>`}).join('');
  const tc=new Map();TASKS.forEach(t=>{const a=tc.get(t.topic)||[0,0];a[0]++;if(sv(t))a[1]++;tc.set(t.topic,a)});
  $('topics').innerHTML=[...tc].sort((a,b)=>b[1][0]-a[1][0]).map(([k,[n,s]])=>`<button class="chip ${F.t.has(k)?'on':''}" data-t="${esc(k)}">${esc(k)}<b>${n}</b>${s?`<small>${s}✓</small>`:''}</button>`).join('');
  flat=view();
  $('rows').innerHTML=flat.map(t=>{const s=stOf(t);
-  return `<tr data-id="${t.id}" class="s-${s} ${cur&&cur.id===t.id?'last':''}"><td class="c-st" data-st="${t.id}" title="${ST[s][1]} (клик — сменить)">${ST[s][0]}</td><td class="c-n">${t.yandex_rank||(t.source==='Yandex'?'★':'—')}</td><td>${esc(t.title)}${t.auto_tests?'<span class="tg">⚡ тесты</span>':''}</td><td class="c-tp">${esc(t.topic)}</td><td><span class="b ${t.difficulty}">${t.difficulty}</span></td></tr>`}).join('')||'<tr><td colspan="5" class="muted">По фильтрам ничего нет.</td></tr>';
+  return `<tr data-id="${t.id}" class="s-${s} ${cur&&cur.id===t.id?'last':''}"><td class="c-st" data-st="${t.id}" title="${ST[s][1]} (клик — сменить)">${ST[s][0]}</td><td class="c-n">${t.yandex_rank||(t.source==='Yandex'?'★':'—')}</td><td>${esc(t.title)}${auto(t)?'<span class="tg">⚡ тесты</span>':''}</td><td class="c-tp">${esc(t.topic)}</td><td><span class="b ${t.difficulty}">${t.difficulty}</span></td></tr>`}).join('')||'<tr><td colspan="5" class="muted">По фильтрам ничего нет.</td></tr>';
  $('cnt').textContent=`Показано ${flat.length} из ${N}`;
 }
 
@@ -284,14 +307,12 @@ function renderDetails(d){
  }
  if(d.constraints)h+=`<h3>Ограничения</h3><div class="desc"><p>${esc(d.constraints)}</p></div>`;
  if(d.idea)h+=`<details class="idea"><summary>Показать идею решения</summary><p>${esc(d.idea)}</p></details>`;
- if(Array.isArray(d.tags)&&d.tags.length){
-  h+='<div class="det-tags">'+d.tags.map(x=>`<span class="tag">${esc(x)}</span>`).join('')+'</div>';
- }
+ if(Array.isArray(d.tags)&&d.tags.length){h+='<div class="det-tags">'+d.tags.map(x=>`<span class="tag">${esc(x)}</span>`).join('')+'</div>';}
  return h;
 }
 function renderTask(){
  const t=cur,p=P[t.id]||{},i=flat.findIndex(x=>x.id===t.id);
- $('thead').innerHTML=`<h2>${esc(t.title)}</h2><span class="b ${t.difficulty}">${t.difficulty}</span>${t.yandex_rank?`<span class="tag y">Yandex #${t.yandex_rank}</span>`:t.source==='Yandex'?'<span class="tag y">★ контест Яндекса</span>':''}<span class="tag">${esc(t.topic)}</span>${t.auto_tests?'<span class="tag ok">⚡ автотесты</span>':''}`;
+ $('thead').innerHTML=`<h2>${esc(t.title)}</h2><span class="b ${t.difficulty}">${t.difficulty}</span>${t.yandex_rank?`<span class="tag y">Yandex #${t.yandex_rank}</span>`:t.source==='Yandex'?'<span class="tag y">★ контест Яндекса</span>':''}<span class="tag">${esc(t.topic)}</span>${TESTS[t.title]?'<span class="tag ok">⚡ автотесты</span>':''}`;
  $('sel').value=stOf(t);$('pos').textContent=i>=0?`${i+1} / ${flat.length}`:'';
  const details=renderDetails(t.details);
  const fallback=!details&&t.description?`<h3>Условие</h3><div class="desc">${md(t.description)}</div>`:'<h3>Условие</h3><p class="muted">Описание пока не добавлено. Полное условие — по ссылке на оригинал.</p>';
@@ -305,11 +326,15 @@ function renderTask(){
      </div>
      ${md('```python\n'+sol+'\n```')}
    </details>`:'';
+ const spent=p.time_spent||0;
+ const spentLine=spent?`<div class="sub">Всего времени: ${fmtTime(spent)}${spent>=LIMIT_SEC?' · превышен лимит 30 мин':''}</div>`:'';
  $('tinfo').innerHTML=(details||fallback)
   +solHtml
   +(t.contract?`<h3>Контракт</h3><pre class="code">${esc(t.contract)}</pre><div class="sub">Реализуйте функцию <code>solve(...)</code>.</div>`:'')
   +`<div class="bar">${t.url?`<a class="btn" href="${esc(t.url)}" target="_blank" rel="noopener">Открыть оригинал ↗</a>`:''}</div>`
-  +`<div class="sub">Попыток: ${p.attempts||0} · успешных прогонов: ${p.passed||0}</div>`;
+  +`<div class="sub">Попыток: ${p.attempts||0} · успешных прогонов: ${p.passed||0}</div>`
+  +spentLine;
+ updateTimer();
 }
 function loadCode(){loading=true;ed.setValue((P[cur.id]||{}).code||starter(cur),-1);ed.session.getUndoManager().reset();loading=false}
 function goto(id){location.hash='#/t/'+id}
@@ -323,121 +348,16 @@ function rnd(){
  if(c.length)goto(c[Math.floor(Math.random()*c.length)].id);
 }
 
-/* ---------- solution actions (делегирование) ---------- */
+/* ---------- solution actions ---------- */
 $('tinfo').addEventListener('click',e=>{
  const a=e.target.dataset.a;
  if(a==='sol-into-editor'){
-  const sol=SOLUTIONS[cur.title];
-  if(!sol)return;
+  const sol=SOLUTIONS[cur.title];if(!sol)return;
   if(confirm('Заменить текущий код редактора эталонным решением?')){
    loading=true;ed.setValue(sol,-1);ed.session.getUndoManager().reset();loading=false;
    const p=P[cur.id]||{};
    upd(cur.id,{code:sol,status:(p.status||'new')==='new'?'in_progress':p.status});
   }
  }else if(a==='sol-copy'){
-  const sol=SOLUTIONS[cur.title];
-  if(!sol)return;
-  navigator.clipboard.writeText(sol).then(
-   ()=>{const btn=e.target;const old=btn.textContent;btn.textContent='Скопировано ✓';setTimeout(()=>btn.textContent=old,1200)},
-   ()=>alert('Не удалось скопировать')
-  );
- }
-});
-
-/* ---------- run ---------- */
-const box=h=>{$('res').innerHTML=h};
-async function run(){
- flush();
- const t=cur,code=ed.getValue(),p=P[t.id]||{},spec=TESTS[t.title];
- upd(t.id,{code,attempts:(p.attempts||0)+1,status:(p.status||'new')==='new'?'in_progress':p.status,last_run:Date.now()/1000});
- if(!t.auto_tests||!spec){box('<div class="r wn">Для этой задачи автотесты пока не заведены. Используйте оригинальный judge или добавьте тесты в tests.json.</div>');return}
- $('run').disabled=true;box('<div class="r in">Выполняется…</div>');
- try{
-  const r=await exec(code,spec.tests,spec.unordered);
-  if(r.timeout){box('<div class="r no">Превышен лимит 4 секунды.</div>');return}
-  if(r.err){box(`<div class="r no">${esc(r.err)}</div>`);return}
-  const o=JSON.parse(r.out);let h='';
-  if(o.fatal)h+=`<div class="r no">${esc(o.fatal)}</div>`;
-  let ok=0;
-  o.res.forEach(x=>{
-   if(x.ok){ok++;h+=`<div class="r ok">Тест ${x.i}: OK</div>`}
-   else h+=`<div class="r no">Тест ${x.i}: ${x.error?esc(x.error):`ожидалось ${esc(x.expected)}, получено ${esc(x.got)}`}\nвход: ${esc(x.args)}</div>`;
-  });
-  if(o.out)h+=`<div class="r in">Вывод:\n${esc(o.out)}</div>`;
-  if(!o.fatal){
-   const all=ok===o.res.length&&o.res.length>0;
-   h=`<div class="r ${all?'ok':'wn'}"><b>${all?'Все тесты пройдены — задача отмечена решённой.':`Пройдено: ${ok}/${o.res.length}`}</b></div>`+h;
-   if(all)upd(t.id,{status:'solved',passed:(P[t.id].passed||0)+1});
-  }
-  box(h);
- }catch(e){box(`<div class="r no">Не удалось запустить Python: ${esc(e.message)}. Проверьте соединение и обновите страницу.</div>`)}
- finally{$('run').disabled=false}
-}
-
-/* ---------- routing / boot ---------- */
-function route(){
- flush();
- const m=location.hash.match(/^#(?:\/t\/)?(\d+)$/),t=m&&TASKS.find(x=>x.id===+m[1]);
- if(t){
-  cur=t;LS.set('yit-cur',t.id);flat=view();
-  $('v-list').hidden=true;$('v-task').hidden=false;
-  renderTask();loadCode();$('res').innerHTML='';ed.resize(true);window.scrollTo(0,0);
- }else{$('v-task').hidden=true;$('v-list').hidden=false;renderAll()}
-}
-async function boot(){
- try{
-  const [a,b,c]=await Promise.all([
-   fetch('tasks.json').then(r=>r.json()),
-   fetch('tests.json').then(r=>r.json()),
-   fetch('solutions.json').then(r=>r.json()).catch(()=>({}))
-  ]);
-  TASKS=a.tasks;TESTS=b;SOLUTIONS=c||{};
- }catch(e){$('lead').innerHTML='<span style="color:var(--bad)">Не удалось загрузить tasks.json / tests.json. Локально откройте сайт через <code>python -m http.server</code>, а не как файл.</span>';return}
- try{P=JSON.parse(LS.get('yit-progress')||'{}')}catch(e){P={}}
- ed=ace.edit('editor',{mode:'ace/mode/python',theme:'ace/theme/tomorrow_night',tabSize:4,useSoftTabs:true,showPrintMargin:false,fontSize:15,wrap:true,enableBasicAutocompletion:false,enableLiveAutocompletion:false,enableSnippets:false,showGutter:true});
- ed.commands.addCommand({name:'run',bindKey:{win:'Ctrl-Enter',mac:'Command-Enter'},exec:run});
- ed.session.on('change',()=>{
-  if(loading)return;
-  if(pend)clearTimeout(pend.tm);
-  const id=cur.id,code=ed.getValue();
-  pend={id,code,tm:setTimeout(flush,600)};
- });
- $('sel').innerHTML=CYC.map(k=>`<option value="${k}">${ST[k][0]} ${ST[k][1]}</option>`).join('');
- spawn();renderStats();
- window.addEventListener('hashchange',route);route();
-}
-$('dist').onclick=e=>{const c=e.target.closest('[data-d]');if(!c)return;const d=c.dataset.d;F.d.has(d)?F.d.delete(d):F.d.add(d);renderAll()};
-$('topics').onclick=e=>{const c=e.target.closest('[data-t]');if(!c)return;const d=c.dataset.t;F.t.has(d)?F.t.delete(d):F.t.add(d);renderAll()};
-$('q').oninput=e=>{F.q=e.target.value.toLowerCase().trim();renderAll()};
-$('fs').onchange=e=>{F.s=e.target.value;renderAll()};
-$('so').onchange=e=>{F.sort=e.target.value;renderAll()};
-$('fy').onchange=e=>{F.y=e.target.checked;renderAll()};
-$('fa').onchange=e=>{F.auto=e.target.checked;renderAll()};
-$('rndl').onclick=rnd;
-$('rows').onclick=e=>{
- const c=e.target.closest('[data-st]');
- if(c){const t=TASKS.find(x=>x.id===+c.dataset.st);upd(t.id,{status:CYC[(CYC.indexOf(stOf(t))+1)%CYC.length]});return}
- const r=e.target.closest('tr[data-id]');if(r)goto(+r.dataset.id);
-};
-$('v-task').querySelector('.tbar').onclick=e=>{const a=e.target.dataset.a;if(a==='back')location.hash='#/';else if(a==='prev')go(-1);else if(a==='next')go(1);else if(a==='rnd')rnd()};
-$('sel').onchange=e=>upd(cur.id,{status:e.target.value});
-$('run').onclick=run;
-$('save').onclick=()=>{flush();const p=P[cur.id]||{};upd(cur.id,{code:ed.getValue(),status:(p.status||'new')==='new'?'in_progress':p.status});box('<div class="r ok">Сохранено.</div>')};
-$('solved').onclick=()=>{upd(cur.id,{code:ed.getValue(),status:'solved'});box('<div class="r ok">Задача отмечена как решённая.</div>')};
-$('reset').onclick=()=>{if(confirm('Сбросить код этой задачи к шаблону?')){pend=null;upd(cur.id,{code:''});loadCode()}};
-$('exp').onclick=()=>{flush();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(P,null,1)],{type:'application/json'}));a.download='progress.json';a.click()};
-$('imp').onchange=async e=>{
- const f=e.target.files[0];if(!f)return;
- try{const o=JSON.parse(await f.text());for(const k in o)P[k]={status:'new',attempts:0,passed:0,last_run:null,code:'',...o[k]};saveP();renderStats();$('v-task').hidden?renderAll():(renderTask(),loadCode());alert('Прогресс импортирован.')}
- catch(err){alert('Не удалось прочитать файл прогресса.')}
- e.target.value='';
-};
-document.addEventListener('keydown',e=>{
- if($('v-task').hidden||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)||e.ctrlKey||e.metaKey||e.altKey)return;
- if(e.key==='j')go(1);else if(e.key==='k')go(-1);
-});
-window.addEventListener('beforeunload',flush);
-boot();
-</script>
-</body>
-</html>
+  const sol=SOLUTIONS[cur.title];if(!sol)return;
+  navigator.clipboard.writeText(sol).then(()=>{const btn=e.target;const old=btn.textContent;btn

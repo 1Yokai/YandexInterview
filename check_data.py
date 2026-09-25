@@ -25,9 +25,28 @@ for t in tasks:
 for key, spec in tests.items():
     if key not in titles:
         errs.append(f"tests.json: «{key}» нет в tasks.json")
-    for i, item in enumerate(spec.get("tests", []), 1):
-        if not isinstance(item, list) or len(item) < 2:
-            errs.append(f"tests.json: «{key}», тест {i}: нужен список [аргументы..., ожидаемый ответ]")
+    kind = spec.get("kind", "solve")
+    if kind in ("solve", "cycle"):
+        for i, item in enumerate(spec.get("tests", []), 1):
+            if not isinstance(item, list) or len(item) < 2:
+                errs.append(f"tests.json: «{key}», тест {i}: нужен список [аргументы..., ожидаемый ответ]")
+    elif kind == "ops":
+        for i, case in enumerate(spec.get("tests", []), 1):
+            if not all(k in case for k in ("ops", "args", "expected")):
+                errs.append(f"tests.json: «{key}», тест {i}: нужны поля ops/args/expected")
+    elif kind == "serde":
+        for i, item in enumerate(spec.get("tests", []), 1):
+            if not isinstance(item, list):
+                errs.append(f"tests.json: «{key}», тест {i}: нужен массив уровня дерева")
+    elif kind == "clone_graph":
+        for i, item in enumerate(spec.get("tests", []), 1):
+            if not isinstance(item, list):
+                errs.append(f"tests.json: «{key}», тест {i}: нужен список списков смежности")
+    elif kind in ("shuffle", "random_pick"):
+        needed = "nums" if kind == "shuffle" else "w"
+        for i, case in enumerate(spec.get("tests", []), 1):
+            if needed not in case:
+                errs.append(f"tests.json: «{key}», тест {i}: нужно поле {needed!r}")
 
 by = collections.Counter(t["difficulty"] for t in tasks)
 print(f"Задач: {len(tasks)} ({dict(by)}), тем: {len({t['topic'] for t in tasks})}")

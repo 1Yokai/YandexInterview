@@ -1,4448 +1,543 @@
-{
- "Two Sum": {
-  "contract": "solve(nums: list[int], target: int) -> list[int]",
-  "tests": [
-   [
-    [
-     [
-      2,
-      7,
-      11,
-      15
-     ],
-     9
-    ],
-    [
-     0,
-     1
-    ]
-   ],
-   [
-    [
-     [
-      3,
-      2,
-      4
-     ],
-     6
-    ],
-    [
-     1,
-     2
-    ]
-   ],
-   [
-    [
-     [
-      3,
-      3
-     ],
-     6
-    ],
-    [
-     0,
-     1
-    ]
-   ]
-  ]
- },
- "Contains Duplicate": {
-  "contract": "solve(nums: list[int]) -> bool",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     3,
-     1
-    ],
-    true
-   ],
-   [
-    [
-     1,
-     2,
-     3,
-     4
-    ],
-    false
-   ],
-   [
-    [
-     1,
-     1,
-     1,
-     3,
-     3,
-     4,
-     3,
-     2,
-     4,
-     2
-    ],
-    true
-   ]
-  ]
- },
- "Valid Anagram": {
-  "contract": "solve(s: str, t: str) -> bool",
-  "tests": [
-   [
-    "anagram",
-    "nagaram",
-    true
-   ],
-   [
-    "rat",
-    "car",
-    false
-   ],
-   [
-    "a",
-    "a",
-    true
-   ]
-  ]
- },
- "Best Time to Buy and Sell Stock": {
-  "contract": "solve(prices: list[int]) -> int",
-  "tests": [
-   [
-    [
-     7,
-     1,
-     5,
-     3,
-     6,
-     4
-    ],
-    5
-   ],
-   [
-    [
-     7,
-     6,
-     4,
-     3,
-     1
-    ],
-    0
-   ],
-   [
-    [
-     2,
-     4,
-     1
-    ],
-    2
-   ]
-  ]
- },
- "Maximum Subarray": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     -2,
-     1,
-     -3,
-     4,
-     -1,
-     2,
-     1,
-     -5,
-     4
-    ],
-    6
-   ],
-   [
-    [
-     1
-    ],
-    1
-   ],
-   [
-    [
-     -1
-    ],
-    -1
-   ]
-  ]
- },
- "Product of Array Except Self": {
-  "contract": "solve(nums: list[int]) -> list[int]",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     3,
-     4
-    ],
-    [
-     24,
-     12,
-     8,
-     6
-    ]
-   ],
-   [
-    [
-     -1,
-     1,
-     0,
-     -3,
-     3
-    ],
-    [
-     0,
-     0,
-     9,
-     0,
-     0
-    ]
-   ]
-  ]
- },
- "Group Anagrams": {
-  "contract": "solve(strs: list[str]) -> list[list[str]]",
-  "tests": [
-   [
-    [
-     "eat",
-     "tea",
-     "tan",
-     "ate",
-     "nat",
-     "bat"
-    ],
-    [
-     [
-      "eat",
-      "tea",
-      "ate"
-     ],
-     [
-      "tan",
-      "nat"
-     ],
-     [
-      "bat"
-     ]
-    ]
-   ],
-   [
-    [
-     ""
-    ],
-    [
-     [
-      ""
-     ]
-    ]
-   ],
-   [
-    [
-     "a"
-    ],
-    [
-     [
-      "a"
-     ]
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Top K Frequent Elements": {
-  "contract": "solve(nums: list[int], k: int) -> list[int]",
-  "tests": [
-   [
-    [
-     1,
-     1,
-     1,
-     2,
-     2,
-     3
-    ],
-    2,
-    [
-     1,
-     2
-    ]
-   ],
-   [
-    [
-     1
-    ],
-    1,
-    [
-     1
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Valid Palindrome": {
-  "contract": "solve(s: str) -> bool",
-  "tests": [
-   [
-    "A man, a plan, a canal: Panama",
-    true
-   ],
-   [
-    "race a car",
-    false
-   ],
-   [
-    " ",
-    true
-   ]
-  ]
- },
- "Valid Parentheses": {
-  "contract": "solve(s: str) -> bool",
-  "tests": [
-   [
-    "()",
-    true
-   ],
-   [
-    "()[]{}",
-    true
-   ],
-   [
-    "(]",
-    false
-   ],
-   [
-    "([)]",
-    false
-   ],
-   [
-    "{[]}",
-    true
-   ]
-  ]
- },
- "Binary Search": {
-  "contract": "solve(nums: list[int], target: int) -> int",
-  "tests": [
-   [
-    [
-     -1,
-     0,
-     3,
-     5,
-     9,
-     12
-    ],
-    9,
-    4
-   ],
-   [
-    [
-     -1,
-     0,
-     3,
-     5,
-     9,
-     12
-    ],
-    2,
-    -1
-   ],
-   [
-    [],
-    1,
-    -1
-   ]
-  ]
- },
- "Climbing Stairs": {
-  "contract": "solve(n: int) -> int",
-  "tests": [
-   [
-    2,
-    2
-   ],
-   [
-    3,
-    3
-   ],
-   [
-    5,
-    8
-   ],
-   [
-    1,
-    1
-   ]
-  ]
- },
- "House Robber": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     3,
-     1
-    ],
-    4
-   ],
-   [
-    [
-     2,
-     7,
-     9,
-     3,
-     1
-    ],
-    12
-   ],
-   [
-    [],
-    0
-   ]
-  ]
- },
- "Merge Two Sorted Lists": {
-  "contract": "solve(a: list[int], b: list[int]) -> list[int]",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     4
-    ],
-    [
-     1,
-     3,
-     4
-    ],
-    [
-     1,
-     1,
-     2,
-     3,
-     4,
-     4
-    ]
-   ],
-   [
-    [],
-    [],
-    []
-   ],
-   [
-    [],
-    [
-     0
-    ],
-    [
-     0
-    ]
-   ]
-  ]
- },
- "Maximum Depth of Binary Tree": {
-  "contract": "solve(root: list[int] | None) -> int",
-  "tests": [
-   [
-    [
-     3,
-     9,
-     20,
-     null,
-     null,
-     15,
-     7
-    ],
-    3
-   ],
-   [
-    [
-     1,
-     null,
-     2
-    ],
-    2
-   ],
-   [
-    [],
-    0
-   ]
-  ]
- },
- "Same Tree": {
-  "contract": "solve(p: list[int], q: list[int]) -> bool",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     3
-    ],
-    [
-     1,
-     2,
-     3
-    ],
-    true
-   ],
-   [
-    [
-     1,
-     2
-    ],
-    [
-     1,
-     null,
-     2
-    ],
-    false
-   ],
-   [
-    [
-     1,
-     2,
-     1
-    ],
-    [
-     1,
-     1,
-     2
-    ],
-    false
-   ]
-  ]
- },
- "Number of Islands": {
-  "contract": "solve(grid: list[list[str]]) -> int",
-  "tests": [
-   [
-    [
-     [
-      "1",
-      "1",
-      "1",
-      "1",
-      "0"
-     ],
-     [
-      "1",
-      "1",
-      "0",
-      "1",
-      "0"
-     ],
-     [
-      "1",
-      "1",
-      "0",
-      "0",
-      "0"
-     ],
-     [
-      "0",
-      "0",
-      "0",
-      "0",
-      "0"
-     ]
-    ],
-    1
-   ],
-   [
-    [
-     [
-      "1",
-      "1",
-      "0",
-      "0",
-      "0"
-     ],
-     [
-      "1",
-      "1",
-      "0",
-      "0",
-      "0"
-     ],
-     [
-      "0",
-      "0",
-      "1",
-      "0",
-      "0"
-     ],
-     [
-      "0",
-      "0",
-      "0",
-      "1",
-      "1"
-     ]
-    ],
-    3
-   ]
-  ]
- },
- "Subarray Sum Equals K": {
-  "contract": "solve(nums: list[int], k: int) -> int",
-  "tests": [
-   [
-    [
-     1,
-     1,
-     1
-    ],
-    2,
-    2
-   ],
-   [
-    [
-     1,
-     2,
-     3
-    ],
-    3,
-    2
-   ],
-   [
-    [
-     1,
-     -1,
-     0
-    ],
-    0,
-    3
-   ]
-  ]
- },
- "Coin Change": {
-  "contract": "solve(coins: list[int], amount: int) -> int",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     5
-    ],
-    11,
-    3
-   ],
-   [
-    [
-     2
-    ],
-    3,
-    -1
-   ],
-   [
-    [],
-    0,
-    0
-   ]
-  ]
- },
- "Word Break": {
-  "contract": "solve(s: str, word_dict: list[str]) -> bool",
-  "tests": [
-   [
-    "leetcode",
-    [
-     "leet",
-     "code"
-    ],
-    true
-   ],
-   [
-    "applepenapple",
-    [
-     "apple",
-     "pen"
-    ],
-    true
-   ],
-   [
-    "catsandog",
-    [
-     "cats",
-     "dog",
-     "sand",
-     "and",
-     "cat"
-    ],
-    false
-   ]
-  ]
- },
- "Longest Increasing Subsequence": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     10,
-     9,
-     2,
-     5,
-     3,
-     7,
-     101,
-     18
-    ],
-    4
-   ],
-   [
-    [
-     0,
-     1,
-     0,
-     3,
-     2,
-     3
-    ],
-    4
-   ],
-   [
-    [
-     7,
-     7,
-     7,
-     7,
-     7,
-     7,
-     7
-    ],
-    1
-   ]
-  ]
- },
- "Unique Paths": {
-  "contract": "solve(m: int, n: int) -> int",
-  "tests": [
-   [
-    3,
-    7,
-    28
-   ],
-   [
-    3,
-    2,
-    3
-   ],
-   [
-    1,
-    1,
-    1
-   ]
-  ]
- },
- "Rotate Image": {
-  "contract": "solve(matrix: list[list[int]]) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     [
-      1,
-      2,
-      3
-     ],
-     [
-      4,
-      5,
-      6
-     ],
-     [
-      7,
-      8,
-      9
-     ]
-    ],
-    [
-     [
-      7,
-      4,
-      1
-     ],
-     [
-      8,
-      5,
-      2
-     ],
-     [
-      9,
-      6,
-      3
-     ]
-    ]
-   ],
-   [
-    [
-     [
-      1,
-      2
-     ],
-     [
-      3,
-      4
-     ]
-    ],
-    [
-     [
-      3,
-      1
-     ],
-     [
-      4,
-      2
-     ]
-    ]
-   ]
-  ]
- },
- "Spiral Matrix": {
-  "contract": "solve(matrix: list[list[int]]) -> list[int]",
-  "tests": [
-   [
-    [
-     [
-      1,
-      2,
-      3
-     ],
-     [
-      4,
-      5,
-      6
-     ],
-     [
-      7,
-      8,
-      9
-     ]
-    ],
-    [
-     1,
-     2,
-     3,
-     6,
-     9,
-     8,
-     7,
-     4,
-     5
-    ]
-   ],
-   [
-    [
-     [
-      1,
-      2,
-      3,
-      4
-     ],
-     [
-      5,
-      6,
-      7,
-      8
-     ],
-     [
-      9,
-      10,
-      11,
-      12
-     ]
-    ],
-    [
-     1,
-     2,
-     3,
-     4,
-     8,
-     12,
-     11,
-     10,
-     9,
-     5,
-     6,
-     7
-    ]
-   ]
-  ]
- },
- "Set Matrix Zeroes": {
-  "contract": "solve(matrix: list[list[int]]) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     [
-      1,
-      1,
-      1
-     ],
-     [
-      1,
-      0,
-      1
-     ],
-     [
-      1,
-      1,
-      1
-     ]
-    ],
-    [
-     [
-      1,
-      0,
-      1
-     ],
-     [
-      0,
-      0,
-      0
-     ],
-     [
-      1,
-      0,
-      1
-     ]
-    ]
-   ],
-   [
-    [
-     [
-      0,
-      1,
-      2,
-      0
-     ],
-     [
-      3,
-      4,
-      5,
-      2
-     ],
-     [
-      1,
-      3,
-      1,
-      5
-     ]
-    ],
-    [
-     [
-      0,
-      0,
-      0,
-      0
-     ],
-     [
-      0,
-      4,
-      5,
-      0
-     ],
-     [
-      0,
-      3,
-      1,
-      0
-     ]
-    ]
-   ]
-  ]
- },
- "Merge Intervals": {
-  "contract": "solve(intervals: list[list[int]]) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     [
-      1,
-      3
-     ],
-     [
-      2,
-      6
-     ],
-     [
-      8,
-      10
-     ],
-     [
-      15,
-      18
-     ]
-    ],
-    [
-     [
-      1,
-      6
-     ],
-     [
-      8,
-      10
-     ],
-     [
-      15,
-      18
-     ]
-    ]
-   ],
-   [
-    [
-     [
-      1,
-      4
-     ],
-     [
-      4,
-      5
-     ]
-    ],
-    [
-     [
-      1,
-      5
-     ]
-    ]
-   ]
-  ]
- },
- "Insert Interval": {
-  "contract": "solve(intervals: list[list[int]], new_interval: list[int]) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     [
-      1,
-      3
-     ],
-     [
-      6,
-      9
-     ]
-    ],
-    [
-     2,
-     5
-    ],
-    [
-     [
-      1,
-      5
-     ],
-     [
-      6,
-      9
-     ]
-    ]
-   ],
-   [
-    [
-     [
-      1,
-      2
-     ],
-     [
-      3,
-      5
-     ],
-     [
-      6,
-      7
-     ],
-     [
-      8,
-      10
-     ],
-     [
-      12,
-      16
-     ]
-    ],
-    [
-     4,
-     8
-    ],
-    [
-     [
-      1,
-      2
-     ],
-     [
-      3,
-      10
-     ],
-     [
-      12,
-      16
-     ]
-    ]
-   ]
-  ]
- },
- "Find Minimum in Rotated Sorted Array": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     3,
-     4,
-     5,
-     1,
-     2
-    ],
-    1
-   ],
-   [
-    [
-     4,
-     5,
-     6,
-     7,
-     0,
-     1,
-     2
-    ],
-    0
-   ],
-   [
-    [
-     11,
-     13,
-     15,
-     17
-    ],
-    11
-   ]
-  ]
- },
- "Search in Rotated Sorted Array": {
-  "contract": "solve(nums: list[int], target: int) -> int",
-  "tests": [
-   [
-    [
-     4,
-     5,
-     6,
-     7,
-     0,
-     1,
-     2
-    ],
-    0,
-    4
-   ],
-   [
-    [
-     4,
-     5,
-     6,
-     7,
-     0,
-     1,
-     2
-    ],
-    3,
-    -1
-   ],
-   [
-    [
-     1
-    ],
-    0,
-    -1
-   ]
-  ]
- },
- "Find First and Last Position of Element in Sorted Array": {
-  "contract": "solve(nums: list[int], target: int) -> list[int]",
-  "tests": [
-   [
-    [
-     5,
-     7,
-     7,
-     8,
-     8,
-     10
-    ],
-    8,
-    [
-     3,
-     4
-    ]
-   ],
-   [
-    [
-     5,
-     7,
-     7,
-     8,
-     8,
-     10
-    ],
-    6,
-    [
-     -1,
-     -1
-    ]
-   ],
-   [
-    [],
-    0,
-    [
-     -1,
-     -1
-    ]
-   ]
-  ]
- },
- "Search a 2D Matrix": {
-  "contract": "solve(matrix: list[list[int]], target: int) -> bool",
-  "tests": [
-   [
-    [
-     [
-      1,
-      3,
-      5,
-      7
-     ],
-     [
-      10,
-      11,
-      16,
-      20
-     ],
-     [
-      23,
-      30,
-      34,
-      60
-     ]
-    ],
-    3,
-    true
-   ],
-   [
-    [
-     [
-      1,
-      3,
-      5,
-      7
-     ],
-     [
-      10,
-      11,
-      16,
-      20
-     ],
-     [
-      23,
-      30,
-      34,
-      60
-     ]
-    ],
-    13,
-    false
-   ]
-  ]
- },
- "Daily Temperatures": {
-  "contract": "solve(temperatures: list[int]) -> list[int]",
-  "tests": [
-   [
-    [
-     73,
-     74,
-     75,
-     71,
-     69,
-     72,
-     76,
-     73
-    ],
-    [
-     1,
-     1,
-     4,
-     2,
-     1,
-     1,
-     0,
-     0
-    ]
-   ],
-   [
-    [
-     30,
-     40,
-     50,
-     60
-    ],
-    [
-     1,
-     1,
-     1,
-     0
-    ]
-   ],
-   [
-    [
-     30,
-     60,
-     90
-    ],
-    [
-     1,
-     1,
-     0
-    ]
-   ]
-  ]
- },
- "Top K Frequent Words": {
-  "contract": "solve(words: list[str], k: int) -> list[str]",
-  "tests": [
-   [
-    [
-     "i",
-     "love",
-     "leetcode",
-     "i",
-     "love",
-     "coding"
-    ],
-    2,
-    [
-     "i",
-     "love"
-    ]
-   ],
-   [
-    [
-     "the",
-     "day",
-     "is",
-     "sunny",
-     "the",
-     "the",
-     "the",
-     "sunny",
-     "is",
-     "is"
-    ],
-    4,
-    [
-     "the",
-     "is",
-     "sunny",
-     "day"
-    ]
-   ]
-  ]
- },
- "Permutation in String": {
-  "contract": "solve(s1: str, s2: str) -> bool",
-  "tests": [
-   [
-    "ab",
-    "eidbaooo",
-    true
-   ],
-   [
-    "ab",
-    "eidboaoo",
-    false
-   ],
-   [
-    "adc",
-    "dcda",
-    true
-   ]
-  ]
- },
- "Find All Anagrams in a String": {
-  "contract": "solve(s: str, p: str) -> list[int]",
-  "tests": [
-   [
-    "cbaebabacd",
-    "abc",
-    [
-     0,
-     6
-    ]
-   ],
-   [
-    "abab",
-    "ab",
-    [
-     0,
-     1,
-     2
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Longest Consecutive Sequence": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     100,
-     4,
-     200,
-     1,
-     3,
-     2
-    ],
-    4
-   ],
-   [
-    [
-     0,
-     3,
-     7,
-     2,
-     5,
-     8,
-     4,
-     6,
-     0,
-     1
-    ],
-    9
-   ],
-   [
-    [],
-    0
-   ]
-  ]
- },
- "3Sum": {
-  "contract": "solve(nums: list[int]) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     -1,
-     0,
-     1,
-     2,
-     -1,
-     -4
-    ],
-    [
-     [
-      -1,
-      -1,
-      2
-     ],
-     [
-      -1,
-      0,
-      1
-     ]
-    ]
-   ],
-   [
-    [
-     0,
-     1,
-     1
-    ],
-    []
-   ],
-   [
-    [
-     0,
-     0,
-     0
-    ],
-    [
-     [
-      0,
-      0,
-      0
-     ]
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Container With Most Water": {
-  "contract": "solve(height: list[int]) -> int",
-  "tests": [
-   [
-    [
-     1,
-     8,
-     6,
-     2,
-     5,
-     4,
-     8,
-     3,
-     7
-    ],
-    49
-   ],
-   [
-    [
-     1,
-     1
-    ],
-    1
-   ]
-  ]
- },
- "Minimum Window Substring": {
-  "contract": "solve(s: str, t: str) -> str",
-  "tests": [
-   [
-    "ADOBECODEBANC",
-    "ABC",
-    "BANC"
-   ],
-   [
-    "a",
-    "a",
-    "a"
-   ],
-   [
-    "a",
-    "aa",
-    ""
-   ]
-  ]
- },
- "Partition Labels": {
-  "contract": "solve(s: str) -> list[int]",
-  "tests": [
-   [
-    "ababcbacadefegdehijhklij",
-    [
-     9,
-     7,
-     8
-    ]
-   ],
-   [
-    "eccbbbbdec",
-    [
-     10
-    ]
-   ]
-  ]
- },
- "Jump Game": {
-  "contract": "solve(nums: list[int]) -> bool",
-  "tests": [
-   [
-    [
-     2,
-     3,
-     1,
-     1,
-     4
-    ],
-    true
-   ],
-   [
-    [
-     3,
-     2,
-     1,
-     0,
-     4
-    ],
-    false
-   ]
-  ]
- },
- "Gas Station": {
-  "contract": "solve(gas: list[int], cost: list[int]) -> int",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     3,
-     4,
-     5
-    ],
-    [
-     3,
-     4,
-     5,
-     1,
-     2
-    ],
-    3
-   ],
-   [
-    [
-     2,
-     3,
-     4
-    ],
-    [
-     3,
-     4,
-     3
-    ],
-    -1
-   ]
-  ]
- },
- "House Robber II": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     2,
-     3,
-     2
-    ],
-    3
-   ],
-   [
-    [
-     1,
-     2,
-     3,
-     1
-    ],
-    4
-   ],
-   [
-    [
-     1,
-     2,
-     3
-    ],
-    3
-   ]
-  ]
- },
- "Decode Ways": {
-  "contract": "solve(s: str) -> int",
-  "tests": [
-   [
-    "12",
-    2
-   ],
-   [
-    "226",
-    3
-   ],
-   [
-    "06",
-    0
-   ]
-  ]
- },
- "Longest Palindromic Substring": {
-  "contract": "solve(s: str) -> str",
-  "tests": [
-   [
-    "forgeeksskeegfor",
-    "geeksskeeg"
-   ],
-   [
-    "cbbd",
-    "bb"
-   ],
-   [
-    "a",
-    "a"
-   ]
-  ]
- },
- "Камни и украшения": {
-  "contract": "solve(jewels: str, stones: str) -> int",
-  "tests": [
-   [
-    "aA",
-    "aAAbbbb",
-    3
-   ],
-   [
-    "z",
-    "ZZ",
-    0
-   ]
-  ]
- },
- "Последовательно идущие единицы": {
-  "contract": "solve(a: list[int]) -> int",
-  "tests": [
-   [
-    [
-     1,
-     1,
-     0,
-     1,
-     1,
-     1
-    ],
-    3
-   ],
-   [
-    [
-     1,
-     1,
-     1
-    ],
-    3
-   ],
-   [
-    [
-     0,
-     0
-    ],
-    0
-   ]
-  ]
- },
- "Удаление дубликатов": {
-  "contract": "solve(a: list[int]) -> list[int]",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     2,
-     3,
-     1
-    ],
-    [
-     1,
-     2,
-     3
-    ]
-   ],
-   [
-    [
-     1,
-     1,
-     1
-    ],
-    [
-     1
-    ]
-   ],
-   [
-    [],
-    []
-   ]
-  ]
- },
- "Анаграммы": {
-  "contract": "solve(a: str, b: str) -> bool",
-  "tests": [
-   [
-    "anagram",
-    "nagaram",
-    true
-   ],
-   [
-    "rat",
-    "car",
-    false
-   ]
-  ]
- },
- "Sort Colors": {
-  "contract": "solve(nums: list[int]) -> list[int]",
-  "tests": [
-   [
-    [
-     2,
-     0,
-     2,
-     1,
-     1,
-     0
-    ],
-    [
-     0,
-     0,
-     1,
-     1,
-     2,
-     2
-    ]
-   ],
-   [
-    [
-     2,
-     0,
-     1
-    ],
-    [
-     0,
-     1,
-     2
-    ]
-   ]
-  ]
- },
- "Majority Element": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     3,
-     2,
-     3
-    ],
-    3
-   ],
-   [
-    [
-     2,
-     2,
-     1,
-     1,
-     1,
-     2,
-     2
-    ],
-    2
-   ]
-  ]
- },
- "Merge Sorted Array": {
-  "contract": "solve(nums1: list[int], m: int, nums2: list[int], n: int) -> list[int]",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     3,
-     0,
-     0,
-     0
-    ],
-    3,
-    [
-     2,
-     5,
-     6
-    ],
-    3,
-    [
-     1,
-     2,
-     2,
-     3,
-     5,
-     6
-    ]
-   ],
-   [
-    [
-     1
-    ],
-    1,
-    [],
-    0,
-    [
-     1
-    ]
-   ]
-  ]
- },
- "Move Zeroes": {
-  "contract": "solve(nums: list[int]) -> list[int]",
-  "tests": [
-   [
-    [
-     0,
-     1,
-     0,
-     3,
-     12
-    ],
-    [
-     1,
-     3,
-     12,
-     0,
-     0
-    ]
-   ],
-   [
-    [
-     0
-    ],
-    [
-     0
-    ]
-   ]
-  ]
- },
- "Longest Substring Without Repeating Characters": {
-  "contract": "solve(s: str) -> int",
-  "tests": [
-   [
-    "abcabcbb",
-    3
-   ],
-   [
-    "bbbbb",
-    1
-   ],
-   [
-    "pwwkew",
-    3
-   ],
-   [
-    "",
-    0
-   ]
-  ]
- },
- "Longest Repeating Character Replacement": {
-  "contract": "solve(s: str, k: int) -> int",
-  "tests": [
-   [
-    "ABAB",
-    2,
-    4
-   ],
-   [
-    "AABABBA",
-    1,
-    4
-   ]
-  ]
- },
- "Palindromic Substrings": {
-  "contract": "solve(s: str) -> int",
-  "tests": [
-   [
-    "abc",
-    3
-   ],
-   [
-    "aaa",
-    6
-   ]
-  ]
- },
- "Minimum Size Subarray Sum": {
-  "contract": "solve(target: int, nums: list[int]) -> int",
-  "tests": [
-   [
-    7,
-    [
-     2,
-     3,
-     1,
-     2,
-     4,
-     3
-    ],
-    2
-   ],
-   [
-    4,
-    [
-     1,
-     4,
-     4
-    ],
-    1
-   ],
-   [
-    11,
-    [
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1,
-     1
-    ],
-    0
-   ]
-  ]
- },
- "Evaluate Reverse Polish Notation": {
-  "contract": "solve(tokens: list[str]) -> int",
-  "tests": [
-   [
-    [
-     "2",
-     "1",
-     "+",
-     "3",
-     "*"
-    ],
-    9
-   ],
-   [
-    [
-     "4",
-     "13",
-     "5",
-     "/",
-     "+"
-    ],
-    6
-   ]
-  ]
- },
- "Car Fleet": {
-  "contract": "solve(target: int, position: list[int], speed: list[int]) -> int",
-  "tests": [
-   [
-    12,
-    [
-     10,
-     8,
-     0,
-     5,
-     3
-    ],
-    [
-     2,
-     4,
-     1,
-     1,
-     3
-    ],
-    3
-   ]
-  ]
- },
- "Largest Rectangle in Histogram": {
-  "contract": "solve(heights: list[int]) -> int",
-  "tests": [
-   [
-    [
-     2,
-     1,
-     5,
-     6,
-     2,
-     3
-    ],
-    10
-   ],
-   [
-    [
-     2,
-     4
-    ],
-    4
-   ]
-  ]
- },
- "Sliding Window Maximum": {
-  "contract": "solve(nums: list[int], k: int) -> list[int]",
-  "tests": [
-   [
-    [
-     1,
-     3,
-     -1,
-     -3,
-     5,
-     3,
-     6,
-     7
-    ],
-    3,
-    [
-     3,
-     3,
-     5,
-     5,
-     6,
-     7
-    ]
-   ],
-   [
-    [
-     1
-    ],
-    1,
-    [
-     1
-    ]
-   ]
-  ]
- },
- "Asteroid Collision": {
-  "contract": "solve(asteroids: list[int]) -> list[int]",
-  "tests": [
-   [
-    [
-     5,
-     10,
-     -5
-    ],
-    [
-     5,
-     10
-    ]
-   ],
-   [
-    [
-     8,
-     -8
-    ],
-    []
-   ],
-   [
-    [
-     10,
-     2,
-     -5
-    ],
-    [
-     10
-    ]
-   ]
-  ]
- },
- "Koko Eating Bananas": {
-  "contract": "solve(piles: list[int], h: int) -> int",
-  "tests": [
-   [
-    [
-     3,
-     6,
-     7,
-     11
-    ],
-    8,
-    4
-   ],
-   [
-    [
-     30,
-     11,
-     23,
-     4,
-     20
-    ],
-    5,
-    30
-   ],
-   [
-    [
-     30,
-     11,
-     23,
-     4,
-     20
-    ],
-    6,
-    23
-   ]
-  ]
- },
- "Search in Rotated Sorted Array II": {
-  "contract": "solve(nums: list[int], target: int) -> bool",
-  "tests": [
-   [
-    [
-     2,
-     5,
-     6,
-     0,
-     0,
-     1,
-     2
-    ],
-    0,
-    true
-   ],
-   [
-    [
-     2,
-     5,
-     6,
-     0,
-     0,
-     1,
-     2
-    ],
-    3,
-    false
-   ]
-  ]
- },
- "Find Peak Element": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     3,
-     1
-    ],
-    2
-   ],
-   [
-    [
-     1,
-     2,
-     1,
-     3,
-     5,
-     6,
-     4
-    ],
-    5
-   ]
-  ]
- },
- "Median of Two Sorted Arrays": {
-  "contract": "solve(nums1: list[int], nums2: list[int]) -> float",
-  "tests": [
-   [
-    [
-     1,
-     3
-    ],
-    [
-     2
-    ],
-    2.0
-   ],
-   [
-    [
-     1,
-     2
-    ],
-    [
-     3,
-     4
-    ],
-    2.5
-   ]
-  ]
- },
- "Task Scheduler": {
-  "contract": "solve(tasks: list[str], n: int) -> int",
-  "tests": [
-   [
-    [
-     "A",
-     "A",
-     "A",
-     "B",
-     "B",
-     "B"
-    ],
-    2,
-    8
-   ],
-   [
-    [
-     "A",
-     "A",
-     "A",
-     "B",
-     "B",
-     "B"
-    ],
-    0,
-    6
-   ],
-   [
-    [
-     "A",
-     "A",
-     "A",
-     "A",
-     "A",
-     "A",
-     "B",
-     "C",
-     "D",
-     "E",
-     "F",
-     "G"
-    ],
-    2,
-    16
-   ]
-  ]
- },
- "K Closest Points to Origin": {
-  "contract": "solve(points: list[list[int]], k: int) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     [
-      1,
-      3
-     ],
-     [
-      -2,
-      2
-     ]
-    ],
-    1,
-    [
-     [
-      -2,
-      2
-     ]
-    ]
-   ],
-   [
-    [
-     [
-      3,
-      3
-     ],
-     [
-      5,
-      -1
-     ],
-     [
-      -2,
-      4
-     ]
-    ],
-    2,
-    [
-     [
-      3,
-      3
-     ],
-     [
-      -2,
-      4
-     ]
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Kth Largest Element in an Array": {
-  "contract": "solve(nums: list[int], k: int) -> int",
-  "tests": [
-   [
-    [
-     3,
-     2,
-     1,
-     5,
-     6,
-     4
-    ],
-    2,
-    5
-   ],
-   [
-    [
-     3,
-     2,
-     3,
-     1,
-     2,
-     4,
-     5,
-     5,
-     6
-    ],
-    4,
-    4
-   ]
-  ]
- },
- "Generate Parentheses": {
-  "contract": "solve(n: int) -> list[str]",
-  "tests": [
-   [
-    3,
-    [
-     "((()))",
-     "(()())",
-     "(())()",
-     "()(())",
-     "()()()"
-    ]
-   ],
-   [
-    1,
-    [
-     "()"
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Combination Sum": {
-  "contract": "solve(candidates: list[int], target: int) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     2,
-     3,
-     6,
-     7
-    ],
-    7,
-    [
-     [
-      2,
-      2,
-      3
-     ],
-     [
-      7
-     ]
-    ]
-   ],
-   [
-    [
-     2,
-     3,
-     5
-    ],
-    8,
-    [
-     [
-      2,
-      2,
-      2,
-      2
-     ],
-     [
-      2,
-      3,
-      3
-     ],
-     [
-      3,
-      5
-     ]
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Permutations": {
-  "contract": "solve(nums: list[int]) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     3
-    ],
-    [
-     [
-      1,
-      2,
-      3
-     ],
-     [
-      1,
-      3,
-      2
-     ],
-     [
-      2,
-      1,
-      3
-     ],
-     [
-      2,
-      3,
-      1
-     ],
-     [
-      3,
-      1,
-      2
-     ],
-     [
-      3,
-      2,
-      1
-     ]
-    ]
-   ],
-   [
-    [
-     1
-    ],
-    [
-     [
-      1
-     ]
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Subsets": {
-  "contract": "solve(nums: list[int]) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     3
-    ],
-    [
-     [],
-     [
-      1
-     ],
-     [
-      2
-     ],
-     [
-      1,
-      2
-     ],
-     [
-      3
-     ],
-     [
-      1,
-      3
-     ],
-     [
-      2,
-      3
-     ],
-     [
-      1,
-      2,
-      3
-     ]
-    ]
-   ],
-   [
-    [
-     0
-    ],
-    [
-     [],
-     [
-      0
-     ]
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Subsets II": {
-  "contract": "solve(nums: list[int]) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     2
-    ],
-    [
-     [],
-     [
-      1
-     ],
-     [
-      2
-     ],
-     [
-      1,
-      2
-     ],
-     [
-      2,
-      2
-     ],
-     [
-      1,
-      2,
-      2
-     ]
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Letter Combinations of a Phone Number": {
-  "contract": "solve(digits: str) -> list[str]",
-  "tests": [
-   [
-    "23",
-    [
-     "ad",
-     "ae",
-     "af",
-     "bd",
-     "be",
-     "bf",
-     "cd",
-     "ce",
-     "cf"
-    ]
-   ],
-   [
-    "",
-    []
-   ]
-  ],
-  "unordered": true
- },
- "Palindrome Partitioning": {
-  "contract": "solve(s: str) -> list[list[str]]",
-  "tests": [
-   [
-    "aab",
-    [
-     [
-      "a",
-      "a",
-      "b"
-     ],
-     [
-      "aa",
-      "b"
-     ]
-    ]
-   ],
-   [
-    "a",
-    [
-     [
-      "a"
-     ]
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "N-Queens": {
-  "contract": "solve(n: int) -> list[list[str]]",
-  "tests": [
-   [
-    4,
-    [
-     [
-      ".Q..",
-      "...Q",
-      "Q...",
-      "..Q."
-     ],
-     [
-      "..Q.",
-      "Q...",
-      "...Q",
-      ".Q.."
-     ]
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Word Search II": {
-  "contract": "solve(board: list[list[str]], words: list[str]) -> list[str]",
-  "tests": [
-   [
-    [
-     [
-      "o",
-      "a",
-      "a",
-      "n"
-     ],
-     [
-      "e",
-      "t",
-      "a",
-      "e"
-     ],
-     [
-      "i",
-      "h",
-      "k",
-      "r"
-     ],
-     [
-      "i",
-      "f",
-      "l",
-      "v"
-     ]
-    ],
-    [
-     "oath",
-     "pea",
-     "eat",
-     "rain"
-    ],
-    [
-     "eat",
-     "oath"
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Max Area of Island": {
-  "contract": "solve(grid: list[list[int]]) -> int",
-  "tests": [
-   [
-    [
-     [
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0
-     ],
-     [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0
-     ],
-     [
-      0,
-      1,
-      1,
-      0,
-      1,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
-     ],
-     [
-      0,
-      1,
-      0,
-      0,
-      1,
-      1,
-      0,
-      0,
-      1,
-      0,
-      1,
-      0,
-      0
-     ],
-     [
-      0,
-      1,
-      0,
-      0,
-      1,
-      1,
-      0,
-      0,
-      1,
-      1,
-      1,
-      0,
-      0
-     ],
-     [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      0,
-      0
-     ],
-     [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      1,
-      1,
-      0,
-      0,
-      0
-     ],
-     [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
-      1,
-      1,
-      0,
-      0,
-      0,
-      0
-     ]
-    ],
-    6
-   ],
-   [
-    [
-     [
-      0,
-      0,
-      0,
-      0,
-      0,
-      0
-     ]
-    ],
-    0
-   ]
-  ]
- },
- "Pacific Atlantic Water Flow": {
-  "contract": "solve(heights: list[list[int]]) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     [
-      1,
-      2,
-      2,
-      3,
-      5
-     ],
-     [
-      3,
-      2,
-      3,
-      4,
-      4
-     ],
-     [
-      2,
-      4,
-      5,
-      3,
-      1
-     ],
-     [
-      6,
-      7,
-      1,
-      4,
-      5
-     ],
-     [
-      5,
-      1,
-      1,
-      2,
-      4
-     ]
-    ],
-    [
-     [
-      0,
-      4
-     ],
-     [
-      1,
-      3
-     ],
-     [
-      1,
-      4
-     ],
-     [
-      2,
-      2
-     ],
-     [
-      3,
-      0
-     ],
-     [
-      3,
-      1
-     ],
-     [
-      4,
-      0
-     ]
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Surrounded Regions": {
-  "contract": "solve(board: list[list[str]]) -> list[list[str]]",
-  "tests": [
-   [
-    [
-     [
-      "X",
-      "X",
-      "X",
-      "X"
-     ],
-     [
-      "X",
-      "O",
-      "O",
-      "X"
-     ],
-     [
-      "X",
-      "X",
-      "O",
-      "X"
-     ],
-     [
-      "X",
-      "O",
-      "X",
-      "X"
-     ]
-    ],
-    [
-     [
-      "X",
-      "X",
-      "X",
-      "X"
-     ],
-     [
-      "X",
-      "X",
-      "X",
-      "X"
-     ],
-     [
-      "X",
-      "X",
-      "X",
-      "X"
-     ],
-     [
-      "X",
-      "O",
-      "X",
-      "X"
-     ]
-    ]
-   ]
-  ]
- },
- "Rotting Oranges": {
-  "contract": "solve(grid: list[list[int]]) -> int",
-  "tests": [
-   [
-    [
-     [
-      2,
-      1,
-      1
-     ],
-     [
-      1,
-      1,
-      0
-     ],
-     [
-      0,
-      1,
-      1
-     ]
-    ],
-    4
-   ],
-   [
-    [
-     [
-      2,
-      1,
-      1
-     ],
-     [
-      0,
-      1,
-      1
-     ],
-     [
-      1,
-      0,
-      1
-     ]
-    ],
-    -1
-   ],
-   [
-    [
-     [
-      0,
-      2
-     ]
-    ],
-    0
-   ]
-  ]
- },
- "Course Schedule": {
-  "contract": "solve(num_courses: int, prerequisites: list[list[int]]) -> bool",
-  "tests": [
-   [
-    2,
-    [
-     [
-      1,
-      0
-     ]
-    ],
-    true
-   ],
-   [
-    2,
-    [
-     [
-      1,
-      0
-     ],
-     [
-      0,
-      1
-     ]
-    ],
-    false
-   ]
-  ]
- },
- "Course Schedule II": {
-  "contract": "solve(num_courses: int, prerequisites: list[list[int]]) -> list[int]",
-  "tests": [
-   [
-    2,
-    [
-     [
-      1,
-      0
-     ]
-    ],
-    [
-     0,
-     1
-    ]
-   ],
-   [
-    4,
-    [
-     [
-      1,
-      0
-     ],
-     [
-      2,
-      1
-     ],
-     [
-      3,
-      2
-     ]
-    ],
-    [
-     0,
-     1,
-     2,
-     3
-    ]
-   ],
-   [
-    1,
-    [],
-    [
-     0
-    ]
-   ]
-  ]
- },
- "Graph Valid Tree": {
-  "contract": "solve(n: int, edges: list[list[int]]) -> bool",
-  "tests": [
-   [
-    5,
-    [
-     [
-      0,
-      1
-     ],
-     [
-      0,
-      2
-     ],
-     [
-      0,
-      3
-     ],
-     [
-      1,
-      4
-     ]
-    ],
-    true
-   ],
-   [
-    5,
-    [
-     [
-      0,
-      1
-     ],
-     [
-      1,
-      2
-     ],
-     [
-      2,
-      3
-     ],
-     [
-      1,
-      3
-     ],
-     [
-      1,
-      4
-     ]
-    ],
-    false
-   ]
-  ]
- },
- "Redundant Connection": {
-  "contract": "solve(edges: list[list[int]]) -> list[int]",
-  "tests": [
-   [
-    [
-     [
-      1,
-      2
-     ],
-     [
-      1,
-      3
-     ],
-     [
-      2,
-      3
-     ]
-    ],
-    [
-     2,
-     3
-    ]
-   ],
-   [
-    [
-     [
-      1,
-      2
-     ],
-     [
-      2,
-      3
-     ],
-     [
-      3,
-      4
-     ],
-     [
-      1,
-      4
-     ],
-     [
-      1,
-      5
-     ]
-    ],
-    [
-     1,
-     4
-    ]
-   ]
-  ]
- },
- "Word Ladder": {
-  "contract": "solve(begin_word: str, end_word: str, word_list: list[str]) -> int",
-  "tests": [
-   [
-    "hit",
-    "cog",
-    [
-     "hot",
-     "dot",
-     "dog",
-     "lot",
-     "log",
-     "cog"
-    ],
-    5
-   ],
-   [
-    "hit",
-    "cog",
-    [
-     "hot",
-     "dot",
-     "dog",
-     "lot",
-     "log"
-    ],
-    0
-   ]
-  ]
- },
- "Find the Town Judge": {
-  "contract": "solve(n: int, trust: list[list[int]]) -> int",
-  "tests": [
-   [
-    2,
-    [
-     [
-      1,
-      2
-     ]
-    ],
-    2
-   ],
-   [
-    3,
-    [
-     [
-      1,
-      3
-     ],
-     [
-      2,
-      3
-     ]
-    ],
-    3
-   ],
-   [
-    3,
-    [
-     [
-      1,
-      3
-     ],
-     [
-      2,
-      3
-     ],
-     [
-      3,
-      1
-     ]
-    ],
-    -1
-   ]
-  ]
- },
- "Open the Lock": {
-  "contract": "solve(deadends: list[str], target: str) -> int",
-  "tests": [
-   [
-    [
-     "0201",
-     "0101",
-     "0102",
-     "1212",
-     "2002"
-    ],
-    "0202",
-    6
-   ],
-   [
-    [
-     "8888"
-    ],
-    "0009",
-    1
-   ]
-  ]
- },
- "Accounts Merge": {
-  "contract": "solve(accounts: list[list[str]]) -> list[list[str]]",
-  "tests": [
-   [
-    [
-     [
-      "John",
-      "johnsmith@mail.com",
-      "john_newyork@mail.com"
-     ],
-     [
-      "John",
-      "johnsmith@mail.com",
-      "john00@mail.com"
-     ],
-     [
-      "Mary",
-      "mary@mail.com"
-     ],
-     [
-      "John",
-      "johnnybravo@mail.com"
-     ]
-    ],
-    [
-     [
-      "John",
-      "john00@mail.com",
-      "john_newyork@mail.com",
-      "johnsmith@mail.com"
-     ],
-     [
-      "Mary",
-      "mary@mail.com"
-     ],
-     [
-      "John",
-      "johnnybravo@mail.com"
-     ]
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Evaluate Division": {
-  "contract": "solve(equations: list[list[str]], values: list[float], queries: list[list[str]]) -> list[float]",
-  "tests": [
-   [
-    [
-     [
-      "a",
-      "b"
-     ],
-     [
-      "b",
-      "c"
-     ]
-    ],
-    [
-     2.0,
-     3.0
-    ],
-    [
-     [
-      "a",
-      "c"
-     ],
-     [
-      "b",
-      "a"
-     ],
-     [
-      "a",
-      "e"
-     ],
-     [
-      "a",
-      "a"
-     ],
-     [
-      "x",
-      "x"
-     ]
-    ],
-    [
-     6.0,
-     0.5,
-     -1.0,
-     1.0,
-     -1.0
-    ]
-   ]
-  ]
- },
- "Cheapest Flights Within K Stops": {
-  "contract": "solve(n: int, flights: list[list[int]], src: int, dst: int, k: int) -> int",
-  "tests": [
-   [
-    4,
-    [
-     [
-      0,
-      1,
-      100
-     ],
-     [
-      1,
-      2,
-      100
-     ],
-     [
-      2,
-      0,
-      100
-     ],
-     [
-      1,
-      3,
-      600
-     ],
-     [
-      2,
-      3,
-      200
-     ]
-    ],
-    0,
-    3,
-    1,
-    700
-   ],
-   [
-    3,
-    [
-     [
-      0,
-      1,
-      100
-     ],
-     [
-      1,
-      2,
-      100
-     ],
-     [
-      0,
-      2,
-      500
-     ]
-    ],
-    0,
-    2,
-    1,
-    200
-   ]
-  ]
- },
- "Network Delay Time": {
-  "contract": "solve(times: list[list[int]], n: int, k: int) -> int",
-  "tests": [
-   [
-    [
-     [
-      2,
-      1,
-      1
-     ],
-     [
-      2,
-      3,
-      1
-     ],
-     [
-      3,
-      4,
-      1
-     ]
-    ],
-    4,
-    2,
-    2
-   ],
-   [
-    [
-     [
-      1,
-      2,
-      1
-     ]
-    ],
-    2,
-    1,
-    1
-   ],
-   [
-    [
-     [
-      1,
-      2,
-      1
-     ]
-    ],
-    2,
-    2,
-    -1
-   ]
-  ]
- },
- "Min Cost to Connect All Points": {
-  "contract": "solve(points: list[list[int]]) -> int",
-  "tests": [
-   [
-    [
-     [
-      0,
-      0
-     ],
-     [
-      2,
-      2
-     ],
-     [
-      3,
-      10
-     ],
-     [
-      5,
-      2
-     ],
-     [
-      7,
-      0
-     ]
-    ],
-    20
-   ]
-  ]
- },
- "Minimum Height Trees": {
-  "contract": "solve(n: int, edges: list[list[int]]) -> list[int]",
-  "tests": [
-   [
-    4,
-    [
-     [
-      1,
-      0
-     ],
-     [
-      1,
-      2
-     ],
-     [
-      1,
-      3
-     ]
-    ],
-    [
-     1
-    ]
-   ],
-   [
-    6,
-    [
-     [
-      3,
-      0
-     ],
-     [
-      3,
-      1
-     ],
-     [
-      3,
-      2
-     ],
-     [
-      3,
-      4
-     ],
-     [
-      5,
-      4
-     ]
-    ],
-    [
-     3,
-     4
-    ]
-   ]
-  ],
-  "unordered": true
- },
- "Partition Equal Subset Sum": {
-  "contract": "solve(nums: list[int]) -> bool",
-  "tests": [
-   [
-    [
-     1,
-     5,
-     11,
-     5
-    ],
-    true
-   ],
-   [
-    [
-     1,
-     2,
-     3,
-     5
-    ],
-    false
-   ]
-  ]
- },
- "Longest Common Subsequence": {
-  "contract": "solve(text1: str, text2: str) -> int",
-  "tests": [
-   [
-    "abcde",
-    "ace",
-    3
-   ],
-   [
-    "abc",
-    "abc",
-    3
-   ],
-   [
-    "abc",
-    "def",
-    0
-   ]
-  ]
- },
- "Coin Change II": {
-  "contract": "solve(amount: int, coins: list[int]) -> int",
-  "tests": [
-   [
-    5,
-    [
-     1,
-     2,
-     5
-    ],
-    4
-   ],
-   [
-    3,
-    [
-     2
-    ],
-    0
-   ],
-   [
-    10,
-    [
-     10
-    ],
-    1
-   ]
-  ]
- },
- "Target Sum": {
-  "contract": "solve(nums: list[int], target: int) -> int",
-  "tests": [
-   [
-    [
-     1,
-     1,
-     1,
-     1,
-     1
-    ],
-    3,
-    5
-   ],
-   [
-    [
-     1
-    ],
-    1,
-    1
-   ]
-  ]
- },
- "Maximum Sum Circular Subarray": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     1,
-     -2,
-     3,
-     -2
-    ],
-    3
-   ],
-   [
-    [
-     5,
-     -3,
-     5
-    ],
-    10
-   ],
-   [
-    [
-     -3,
-     -2,
-     -3
-    ],
-    -2
-   ]
-  ]
- },
- "Unique Paths II": {
-  "contract": "solve(obstacle_grid: list[list[int]]) -> int",
-  "tests": [
-   [
-    [
-     [
-      0,
-      0,
-      0
-     ],
-     [
-      0,
-      1,
-      0
-     ],
-     [
-      0,
-      0,
-      0
-     ]
-    ],
-    2
-   ],
-   [
-    [
-     [
-      0,
-      1
-     ],
-     [
-      0,
-      0
-     ]
-    ],
-    1
-   ]
-  ]
- },
- "Triangle": {
-  "contract": "solve(triangle: list[list[int]]) -> int",
-  "tests": [
-   [
-    [
-     [
-      2
-     ],
-     [
-      3,
-      4
-     ],
-     [
-      6,
-      5,
-      7
-     ],
-     [
-      4,
-      1,
-      8,
-      3
-     ]
-    ],
-    11
-   ],
-   [
-    [
-     [
-      -10
-     ]
-    ],
-    -10
-   ]
-  ]
- },
- "Distinct Subsequences": {
-  "contract": "solve(s: str, t: str) -> int",
-  "tests": [
-   [
-    "rabbbit",
-    "rabbit",
-    3
-   ],
-   [
-    "babgbag",
-    "bag",
-    5
-   ]
-  ]
- },
- "Edit Distance": {
-  "contract": "solve(word1: str, word2: str) -> int",
-  "tests": [
-   [
-    "horse",
-    "ros",
-    3
-   ],
-   [
-    "intention",
-    "execution",
-    5
-   ]
-  ]
- },
- "Maximum Product Subarray": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     2,
-     3,
-     -2,
-     4
-    ],
-    6
-   ],
-   [
-    [
-     -2,
-     0,
-     -1
-    ],
-    0
-   ]
-  ]
- },
- "Min Cost Climbing Stairs": {
-  "contract": "solve(cost: list[int]) -> int",
-  "tests": [
-   [
-    [
-     10,
-     15,
-     20
-    ],
-    15
-   ],
-   [
-    [
-     1,
-     100,
-     1,
-     1,
-     1,
-     100,
-     1,
-     1,
-     100,
-     1
-    ],
-    6
-   ]
-  ]
- },
- "Non-overlapping Intervals": {
-  "contract": "solve(intervals: list[list[int]]) -> int",
-  "tests": [
-   [
-    [
-     [
-      1,
-      2
-     ],
-     [
-      2,
-      3
-     ],
-     [
-      3,
-      4
-     ],
-     [
-      1,
-      3
-     ]
-    ],
-    1
-   ],
-   [
-    [
-     [
-      1,
-      2
-     ],
-     [
-      1,
-      2
-     ],
-     [
-      1,
-      2
-     ]
-    ],
-    2
-   ],
-   [
-    [
-     [
-      1,
-      2
-     ],
-     [
-      2,
-      3
-     ]
-    ],
-    0
-   ]
-  ]
- },
- "Meeting Rooms II": {
-  "contract": "solve(intervals: list[list[int]]) -> int",
-  "tests": [
-   [
-    [
-     [
-      0,
-      30
-     ],
-     [
-      5,
-      10
-     ],
-     [
-      15,
-      20
-     ]
-    ],
-    2
-   ],
-   [
-    [
-     [
-      7,
-      10
-     ],
-     [
-      2,
-      4
-     ]
-    ],
-    1
-   ]
-  ]
- },
- "Jump Game II": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     2,
-     3,
-     1,
-     1,
-     4
-    ],
-    2
-   ],
-   [
-    [
-     2,
-     3,
-     0,
-     1,
-     4
-    ],
-    2
-   ]
-  ]
- },
- "Car Pooling": {
-  "contract": "solve(trips: list[list[int]], capacity: int) -> bool",
-  "tests": [
-   [
-    [
-     [
-      2,
-      1,
-      5
-     ],
-     [
-      3,
-      3,
-      7
-     ]
-    ],
-    4,
-    false
-   ],
-   [
-    [
-     [
-      2,
-      1,
-      5
-     ],
-     [
-      3,
-      3,
-      7
-     ]
-    ],
-    5,
-    true
-   ]
-  ]
- },
- "Hand of Straights": {
-  "contract": "solve(hand: list[int], group_size: int) -> bool",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     3,
-     6,
-     2,
-     3,
-     4,
-     7,
-     8
-    ],
-    3,
-    true
-   ],
-   [
-    [
-     1,
-     2,
-     3,
-     4,
-     5
-    ],
-    4,
-    false
-   ]
-  ]
- },
- "Queue Reconstruction by Height": {
-  "contract": "solve(people: list[list[int]]) -> list[list[int]]",
-  "tests": [
-   [
-    [
-     [
-      7,
-      0
-     ],
-     [
-      4,
-      4
-     ],
-     [
-      7,
-      1
-     ],
-     [
-      5,
-      0
-     ],
-     [
-      6,
-      1
-     ],
-     [
-      5,
-      2
-     ]
-    ],
-    [
-     [
-      5,
-      0
-     ],
-     [
-      7,
-      0
-     ],
-     [
-      5,
-      2
-     ],
-     [
-      6,
-      1
-     ],
-     [
-      4,
-      4
-     ],
-     [
-      7,
-      1
-     ]
-    ]
-   ]
-  ]
- },
- "Valid Sudoku": {
-  "contract": "solve(board: list[list[str]]) -> bool",
-  "tests": [
-   [
-    [
-     [
-      "5",
-      "3",
-      ".",
-      ".",
-      "7",
-      ".",
-      ".",
-      ".",
-      "."
-     ],
-     [
-      "6",
-      ".",
-      ".",
-      "1",
-      "9",
-      "5",
-      ".",
-      ".",
-      "."
-     ],
-     [
-      ".",
-      "9",
-      "8",
-      ".",
-      ".",
-      ".",
-      ".",
-      "6",
-      "."
-     ],
-     [
-      "8",
-      ".",
-      ".",
-      ".",
-      "6",
-      ".",
-      ".",
-      ".",
-      "3"
-     ],
-     [
-      "4",
-      ".",
-      ".",
-      "8",
-      ".",
-      "3",
-      ".",
-      ".",
-      "1"
-     ],
-     [
-      "7",
-      ".",
-      ".",
-      ".",
-      "2",
-      ".",
-      ".",
-      ".",
-      "6"
-     ],
-     [
-      ".",
-      "6",
-      ".",
-      ".",
-      ".",
-      ".",
-      "2",
-      "8",
-      "."
-     ],
-     [
-      ".",
-      ".",
-      ".",
-      "4",
-      "1",
-      "9",
-      ".",
-      ".",
-      "5"
-     ],
-     [
-      ".",
-      ".",
-      ".",
-      ".",
-      "8",
-      ".",
-      ".",
-      "7",
-      "9"
-     ]
-    ],
-    true
-   ]
-  ]
- },
- "Number of 1 Bits": {
-  "contract": "solve(n: int) -> int",
-  "tests": [
-   [
-    11,
-    3
-   ],
-   [
-    128,
-    1
-   ],
-   [
-    0,
-    0
-   ]
-  ]
- },
- "Counting Bits": {
-  "contract": "solve(n: int) -> list[int]",
-  "tests": [
-   [
-    2,
-    [
-     0,
-     1,
-     1
-    ]
-   ],
-   [
-    5,
-    [
-     0,
-     1,
-     1,
-     2,
-     1,
-     2
-    ]
-   ]
-  ]
- },
- "Missing Number": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     3,
-     0,
-     1
-    ],
-    2
-   ],
-   [
-    [
-     0,
-     1
-    ],
-    2
-   ],
-   [
-    [
-     9,
-     6,
-     4,
-     2,
-     3,
-     5,
-     7,
-     0,
-     1
-    ],
-    8
-   ]
-  ]
- },
- "Reverse Bits": {
-  "contract": "solve(n: int) -> int",
-  "tests": [
-   [
-    43261596,
-    964176192
-   ]
-  ]
- },
- "Sum of Two Integers": {
-  "contract": "solve(a: int, b: int) -> int",
-  "tests": [
-   [
-    1,
-    2,
-    3
-   ],
-   [
-    2,
-    3,
-    5
-   ],
-   [
-    -1,
-    1,
-    0
-   ]
-  ]
- },
- "Plus One": {
-  "contract": "solve(digits: list[int]) -> list[int]",
-  "tests": [
-   [
-    [
-     1,
-     2,
-     3
-    ],
-    [
-     1,
-     2,
-     4
-    ]
-   ],
-   [
-    [
-     9,
-     9
-    ],
-    [
-     1,
-     0,
-     0
-    ]
-   ],
-   [
-    [
-     0
-    ],
-    [
-     1
-    ]
-   ]
-  ]
- },
- "Happy Number": {
-  "contract": "solve(n: int) -> bool",
-  "tests": [
-   [
-    19,
-    true
-   ],
-   [
-    2,
-    false
-   ]
-  ]
- },
- "Single Number": {
-  "contract": "solve(nums: list[int]) -> int",
-  "tests": [
-   [
-    [
-     2,
-     2,
-     1
-    ],
-    1
-   ],
-   [
-    [
-     4,
-     1,
-     2,
-     1,
-     2
-    ],
-    4
-   ]
-  ]
- },
- "Regular Expression Matching": {
-  "contract": "solve(s: str, p: str) -> bool",
-  "tests": [
-   [
-    "aa",
-    "a",
-    false
-   ],
-   [
-    "aa",
-    "a*",
-    true
-   ],
-   [
-    "ab",
-    ".*",
-    true
-   ],
-   [
-    "mississippi",
-    "mis*is*p*.",
-    false
-   ]
-  ]
- }
-}
+import json, importlib.util
+
+spec_ = importlib.util.spec_from_file_location('runner2', 'runner2.py')
+R = importlib.util.module_from_spec(spec_); spec_.loader.exec_module(R)
+
+TESTS = {}   # title -> spec dict (kind, arg_types, ret_type, unordered, tests, class_name, template)
+SOL = {}     # title -> reference solution source code
+
+def add(title, spec, code):
+    TESTS[title] = spec
+    SOL[title] = code
+
+# ---------- simple array task, no tree/list ----------
+add("Find the Duplicate Number",
+    {"kind": "solve", "tests": [[[1,3,4,2,2],2],[[3,1,3,4,2],3]]},
+    "def solve(nums):\n"
+    "    slow=fast=nums[0]\n"
+    "    while True:\n"
+    "        slow=nums[slow]; fast=nums[nums[fast]]\n"
+    "        if slow==fast: break\n"
+    "    slow2=nums[0]\n"
+    "    while slow2!=slow:\n"
+    "        slow2=nums[slow2]; slow=nums[slow]\n"
+    "    return slow\n")
+
+add("Генерация скобочных последовательностей",
+    {"kind": "solve", "unordered": True,
+     "tests": [[3,["((()))","(()())","(())()","()(())","()()()"]],[1,["()"]]]},
+    "def solve(n):\n"
+    "    res=[]\n"
+    "    def bt(s,o,c):\n"
+    "        if len(s)==2*n: res.append(s); return\n"
+    "        if o<n: bt(s+'(',o+1,c)\n"
+    "        if c<o: bt(s+')',o,c+1)\n"
+    "    bt('',0,0); return res\n")
+
+# ---------- linked list ----------
+add("Reverse Linked List",
+    {"kind": "solve", "arg_types": ["list"], "ret_type": "list",
+     "tests": [[[1,2,3,4,5],[5,4,3,2,1]],[[],[]]]},
+    "def solve(head):\n"
+    "    prev=None\n"
+    "    while head:\n"
+    "        head.next,prev,head = prev,head,head.next\n"
+    "    return prev\n")
+
+add("Reorder List",
+    {"kind": "solve", "arg_types": ["list"], "ret_type": "list",
+     "tests": [[[1,2,3,4],[1,4,2,3]],[[1,2,3,4,5],[1,5,2,4,3]]]},
+    "def solve(head):\n"
+    "    vals=[]\n"
+    "    n=head\n"
+    "    while n: vals.append(n.val); n=n.next\n"
+    "    i,j=0,len(vals)-1\n"
+    "    order=[]\n"
+    "    while i<=j:\n"
+    "        order.append(vals[i]); i+=1\n"
+    "        if i<=j: order.append(vals[j]); j-=1\n"
+    "    n=head\n"
+    "    for v in order: n.val=v; n=n.next\n"
+    "    return head\n")
+
+add("Remove Nth Node From End of List",
+    {"kind": "solve", "arg_types": ["list","raw"], "ret_type": "list",
+     "tests": [[[1,2,3,4,5],2,[1,2,3,5]],[[1],1,[]],[[1,2],1,[1]]]},
+    "def solve(head,n):\n"
+    "    dummy=ListNode(0,head); fast=slow=dummy\n"
+    "    for _ in range(n): fast=fast.next\n"
+    "    while fast.next: fast=fast.next; slow=slow.next\n"
+    "    slow.next=slow.next.next\n"
+    "    return dummy.next\n")
+
+add("Add Two Numbers",
+    {"kind": "solve", "arg_types": ["list","list"], "ret_type": "list",
+     "tests": [[[2,4,3],[5,6,4],[7,0,8]],[[0],[0],[0]],[[9,9,9],[1],[0,0,0,1]]]},
+    "def solve(l1,l2):\n"
+    "    dummy=cur=ListNode(0); carry=0\n"
+    "    while l1 or l2 or carry:\n"
+    "        s=(l1.val if l1 else 0)+(l2.val if l2 else 0)+carry\n"
+    "        carry,v=divmod(s,10)\n"
+    "        cur.next=ListNode(v); cur=cur.next\n"
+    "        l1=l1.next if l1 else None; l2=l2.next if l2 else None\n"
+    "    return dummy.next\n")
+
+add("Linked List Cycle",
+    {"kind": "cycle", "tests": [[[3,2,0,-4],1,True],[[1,2],0,True],[[1],-1,False]]},
+    "def solve(head):\n"
+    "    slow=fast=head\n"
+    "    while fast and fast.next:\n"
+    "        slow=slow.next; fast=fast.next.next\n"
+    "        if slow is fast: return True\n"
+    "    return False\n")
+
+add("Merge k Sorted Lists",
+    {"kind": "solve", "arg_types": ["lists"], "ret_type": "list",
+     "tests": [[[[1,4,5],[1,3,4],[2,6]],[1,1,2,3,4,4,5,6]],[[],[]],[[[]],[]]]},
+    "import heapq\n"
+    "def solve(lists):\n"
+    "    h=[]\n"
+    "    for i,n in enumerate(lists):\n"
+    "        if n: heapq.heappush(h,(n.val,i,n))\n"
+    "    dummy=cur=ListNode(0)\n"
+    "    while h:\n"
+    "        v,i,n=heapq.heappop(h)\n"
+    "        cur.next=n; cur=n\n"
+    "        if n.next: heapq.heappush(h,(n.next.val,i,n.next))\n"
+    "    return dummy.next\n")
+
+add("Reverse Nodes in k-Group",
+    {"kind": "solve", "arg_types": ["list","raw"], "ret_type": "list",
+     "tests": [[[1,2,3,4,5],2,[2,1,4,3,5]],[[1,2,3,4,5],3,[3,2,1,4,5]],[[1,2],3,[1,2]]]},
+    "def solve(head,k):\n"
+    "    node=head\n"
+    "    for _ in range(k):\n"
+    "        if not node: return head\n"
+    "        node=node.next\n"
+    "    prev=solve(node,k)\n"
+    "    cur=head\n"
+    "    for _ in range(k):\n"
+    "        cur.next,prev,cur = prev,cur,cur.next\n"
+    "    return prev\n")
+
+# ---------- trees ----------
+add("Same Tree",
+    {"kind": "solve", "arg_types": ["tree","tree"],
+     "tests": [[[1,2,3],[1,2,3],True],[[1,2],[1,None,2],False],[[1,2,1],[1,1,2],False]]},
+    "def solve(p,q):\n"
+    "    if not p and not q: return True\n"
+    "    if not p or not q or p.val!=q.val: return False\n"
+    "    return solve(p.left,q.left) and solve(p.right,q.right)\n")
+
+add("Maximum Depth of Binary Tree",
+    {"kind": "solve", "arg_types": ["tree"],
+     "tests": [[[3,9,20,None,None,15,7],3],[[1,None,2],2],[[],0]]},
+    "def solve(root):\n"
+    "    if not root: return 0\n"
+    "    return 1+max(solve(root.left),solve(root.right))\n")
+
+add("Binary Tree Level Order Traversal",
+    {"kind": "solve", "arg_types": ["tree"],
+     "tests": [[[3,9,20,None,None,15,7],[[3],[9,20],[15,7]]],[[1],[[1]]],[[],[]]]},
+    "def solve(root):\n"
+    "    if not root: return []\n"
+    "    res=[]; q=[root]\n"
+    "    while q:\n"
+    "        res.append([n.val for n in q])\n"
+    "        q=[c for n in q for c in (n.left,n.right) if c]\n"
+    "    return res\n")
+
+add("Binary Tree Right Side View",
+    {"kind": "solve", "arg_types": ["tree"],
+     "tests": [[[1,2,3,None,5,None,4],[1,3,4]],[[1,None,3],[1,3]],[[],[]]]},
+    "def solve(root):\n"
+    "    if not root: return []\n"
+    "    res=[]; q=[root]\n"
+    "    while q:\n"
+    "        res.append(q[-1].val)\n"
+    "        q=[c for n in q for c in (n.left,n.right) if c]\n"
+    "    return res\n")
+
+add("Diameter of Binary Tree",
+    {"kind": "solve", "arg_types": ["tree"],
+     "tests": [[[1,2,3,4,5],3],[[1,2],1]]},
+    "def solve(root):\n"
+    "    best=0\n"
+    "    def depth(n):\n"
+    "        nonlocal best\n"
+    "        if not n: return 0\n"
+    "        l,r=depth(n.left),depth(n.right)\n"
+    "        best=max(best,l+r)\n"
+    "        return 1+max(l,r)\n"
+    "    depth(root); return best\n")
+
+add("Validate Binary Search Tree",
+    {"kind": "solve", "arg_types": ["tree"],
+     "tests": [[[2,1,3],True],[[5,1,4,None,None,3,6],False],[[5,4,6,None,None,3,7],False]]},
+    "def solve(root,lo=float('-inf'),hi=float('inf')):\n"
+    "    if not root: return True\n"
+    "    if not (lo<root.val<hi): return False\n"
+    "    return solve(root.left,lo,root.val) and solve(root.right,root.val,hi)\n")
+
+add("Kth Smallest Element in a BST",
+    {"kind": "solve", "arg_types": ["tree","raw"],
+     "tests": [[[3,1,4,None,2],1,1],[[5,3,6,2,4,None,None,1],3,3]]},
+    "def solve(root,k):\n"
+    "    st=[]; n=root\n"
+    "    while True:\n"
+    "        while n: st.append(n); n=n.left\n"
+    "        n=st.pop(); k-=1\n"
+    "        if k==0: return n.val\n"
+    "        n=n.right\n")
+
+add("Construct Binary Tree from Preorder and Inorder Traversal",
+    {"kind": "solve", "arg_types": ["raw","raw"], "ret_type": "tree",
+     "tests": [[[3,9,20,15,7],[9,3,15,20,7],[3,9,20,None,None,15,7]],[[-1],[-1],[-1]]]},
+    "def solve(preorder,inorder):\n"
+    "    if not preorder: return None\n"
+    "    root=TreeNode(preorder[0])\n"
+    "    mid=inorder.index(preorder[0])\n"
+    "    root.left=solve(preorder[1:mid+1],inorder[:mid])\n"
+    "    root.right=solve(preorder[mid+1:],inorder[mid+1:])\n"
+    "    return root\n")
+
+add("Binary Tree Maximum Path Sum",
+    {"kind": "solve", "arg_types": ["tree"],
+     "tests": [[[1,2,3],6],[[-10,9,20,None,None,15,7],42]]},
+    "def solve(root):\n"
+    "    best=float('-inf')\n"
+    "    def gain(n):\n"
+    "        nonlocal best\n"
+    "        if not n: return 0\n"
+    "        l=max(gain(n.left),0); r=max(gain(n.right),0)\n"
+    "        best=max(best,n.val+l+r)\n"
+    "        return n.val+max(l,r)\n"
+    "    gain(root); return best\n")
+
+add("Serialize and Deserialize Binary Tree",
+    {"kind": "serde", "tests": [[1,2,3,None,None,4,5],[],[1],[1,2]]},
+    "def serialize(root):\n"
+    "    vals=[]\n"
+    "    def dfs(n):\n"
+    "        if not n: vals.append('#'); return\n"
+    "        vals.append(str(n.val)); dfs(n.left); dfs(n.right)\n"
+    "    dfs(root); return ','.join(vals)\n"
+    "def deserialize(data):\n"
+    "    it=iter(data.split(','))\n"
+    "    def build():\n"
+    "        v=next(it)\n"
+    "        if v=='#': return None\n"
+    "        n=TreeNode(int(v)); n.left=build(); n.right=build(); return n\n"
+    "    return build()\n")
+
+add("Binary Tree Zigzag Level Order Traversal",
+    {"kind": "solve", "arg_types": ["tree"],
+     "tests": [[[3,9,20,None,None,15,7],[[3],[20,9],[15,7]]],[[1],[[1]]],[[],[]]]},
+    "def solve(root):\n"
+    "    if not root: return []\n"
+    "    res=[]; q=[root]; ltr=True\n"
+    "    while q:\n"
+    "        vals=[n.val for n in q]\n"
+    "        res.append(vals if ltr else vals[::-1]); ltr=not ltr\n"
+    "        q=[c for n in q for c in (n.left,n.right) if c]\n"
+    "    return res\n")
+
+add("Path Sum II",
+    {"kind": "solve", "arg_types": ["tree","raw"], "unordered": True,
+     "tests": [[[5,4,8,11,None,13,4,7,2,None,None,5,1],22,[[5,4,11,2],[5,8,4,5]]],[[1,2,3],5,[]]]},
+    "def solve(root,target):\n"
+    "    res=[]\n"
+    "    def dfs(n,rem,path):\n"
+    "        if not n: return\n"
+    "        path=path+[n.val]; rem-=n.val\n"
+    "        if not n.left and not n.right and rem==0: res.append(path); return\n"
+    "        dfs(n.left,rem,path); dfs(n.right,rem,path)\n"
+    "    dfs(root,target,[]); return res\n")
+
+add("House Robber III",
+    {"kind": "solve", "arg_types": ["tree"],
+     "tests": [[[3,2,3,None,3,None,1],7],[[3,4,5,1,3,None,1],9]]},
+    "def solve(root):\n"
+    "    def dfs(n):\n"
+    "        if not n: return (0,0)\n"
+    "        l=dfs(n.left); r=dfs(n.right)\n"
+    "        return (n.val+l[1]+r[1], max(l)+max(r))\n"
+    "    return max(dfs(root))\n")
+
+add("Subtree of Another Tree",
+    {"kind": "solve", "arg_types": ["tree","tree"],
+     "tests": [[[3,4,5,1,2],[4,1,2],True],[[3,4,5,1,2,None,None,None,None,0],[4,1,2],False]]},
+    "def same(a,b):\n"
+    "    if not a and not b: return True\n"
+    "    if not a or not b or a.val!=b.val: return False\n"
+    "    return same(a.left,b.left) and same(a.right,b.right)\n"
+    "def solve(root,subRoot):\n"
+    "    if not root: return subRoot is None\n"
+    "    if same(root,subRoot): return True\n"
+    "    return solve(root.left,subRoot) or solve(root.right,subRoot)\n")
+
+add("Balanced Binary Tree",
+    {"kind": "solve", "arg_types": ["tree"],
+     "tests": [[[3,9,20,None,None,15,7],True],[[1,2,2,3,3,None,None,4,4],False],[[],True]]},
+    "def solve(root):\n"
+    "    def h(n):\n"
+    "        if not n: return 0\n"
+    "        l=h(n.left)\n"
+    "        if l==-1: return -1\n"
+    "        r=h(n.right)\n"
+    "        if r==-1: return -1\n"
+    "        if abs(l-r)>1: return -1\n"
+    "        return 1+max(l,r)\n"
+    "    return h(root)!=-1\n")
+
+add("Invert Binary Tree",
+    {"kind": "solve", "arg_types": ["tree"], "ret_type": "tree",
+     "tests": [[[4,2,7,1,3,6,9],[4,7,2,9,6,3,1]],[[],[]]]},
+    "def solve(root):\n"
+    "    if not root: return None\n"
+    "    root.left,root.right=solve(root.right),solve(root.left)\n"
+    "    return root\n")
+
+add("Symmetric Tree",
+    {"kind": "solve", "arg_types": ["tree"],
+     "tests": [[[1,2,2,3,4,4,3],True],[[1,2,2,None,3,None,3],False]]},
+    "def solve(root):\n"
+    "    def mirror(a,b):\n"
+    "        if not a and not b: return True\n"
+    "        if not a or not b or a.val!=b.val: return False\n"
+    "        return mirror(a.left,b.right) and mirror(a.right,b.left)\n"
+    "    return mirror(root,root)\n")
+
+add("Lowest Common Ancestor of a Binary Search Tree",
+    {"kind": "solve", "arg_types": ["tree","raw","raw"],
+     "tests": [[[6,2,8,0,4,7,9,None,None,3,5],2,8,6],[[6,2,8,0,4,7,9,None,None,3,5],2,4,2],[[2,1],1,2,2]]},
+    "def solve(root,p,q):\n"
+    "    n=root\n"
+    "    while n:\n"
+    "        if p<n.val and q<n.val: n=n.left\n"
+    "        elif p>n.val and q>n.val: n=n.right\n"
+    "        else: return n.val\n")
+
+# ---------- graph ----------
+add("Clone Graph",
+    {"kind": "clone_graph",
+     "tests": [[[2,4],[1,3],[2,4],[1,3]],[[]],[[2],[1]]]},
+    "def solve(node):\n"
+    "    if not node: return None\n"
+    "    mapping={}\n"
+    "    def dfs(n):\n"
+    "        if n in mapping: return mapping[n]\n"
+    "        copy=Node(n.val); mapping[n]=copy\n"
+    "        copy.neighbors=[dfs(nb) for nb in n.neighbors]\n"
+    "        return copy\n"
+    "    return dfs(node)\n")
+
+# ---------- heap / design ----------
+add("Find Median from Data Stream",
+    {"kind": "ops", "class_name": "MedianFinder",
+     "tests": [{"ops": ["MedianFinder","addNum","addNum","findMedian","addNum","findMedian"],
+                "args": [[], [1], [2], [], [3], []],
+                "expected": [None,None,None,1.5,None,2]}]},
+    "import heapq\n"
+    "class MedianFinder:\n"
+    "    def __init__(self):\n"
+    "        self.lo=[]; self.hi=[]\n"
+    "    def addNum(self,num):\n"
+    "        heapq.heappush(self.lo,-num)\n"
+    "        heapq.heappush(self.hi,-heapq.heappop(self.lo))\n"
+    "        if len(self.hi)>len(self.lo):\n"
+    "            heapq.heappush(self.lo,-heapq.heappop(self.hi))\n"
+    "    def findMedian(self):\n"
+    "        if len(self.lo)>len(self.hi): return -self.lo[0]\n"
+    "        return (-self.lo[0]+self.hi[0])/2\n")
+
+add("Implement Trie (Prefix Tree)",
+    {"kind": "ops", "class_name": "Trie",
+     "tests": [{"ops": ["Trie","insert","search","search","startsWith","insert","search"],
+                "args": [[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]],
+                "expected": [None,None,True,False,True,None,True]}]},
+    "class Trie:\n"
+    "    def __init__(self): self.root={}\n"
+    "    def insert(self,word):\n"
+    "        n=self.root\n"
+    "        for c in word: n=n.setdefault(c,{})\n"
+    "        n['$']=True\n"
+    "    def search(self,word):\n"
+    "        n=self.root\n"
+    "        for c in word:\n"
+    "            if c not in n: return False\n"
+    "            n=n[c]\n"
+    "        return '$' in n\n"
+    "    def startsWith(self,prefix):\n"
+    "        n=self.root\n"
+    "        for c in prefix:\n"
+    "            if c not in n: return False\n"
+    "            n=n[c]\n"
+    "        return True\n")
+
+add("Design Add and Search Words Data Structure",
+    {"kind": "ops", "class_name": "WordDictionary",
+     "tests": [{"ops": ["WordDictionary","addWord","addWord","addWord","search","search","search","search"],
+                "args": [[], ["bad"], ["dad"], ["mad"], [".ad"], ["bad"], [".ad"], ["bad."]],
+                "expected": [None,None,None,None,True,True,True,False]}]},
+    "class WordDictionary:\n"
+    "    def __init__(self): self.root={}\n"
+    "    def addWord(self,word):\n"
+    "        n=self.root\n"
+    "        for c in word: n=n.setdefault(c,{})\n"
+    "        n['$']=True\n"
+    "    def search(self,word):\n"
+    "        def dfs(node,i):\n"
+    "            if i==len(word): return '$' in node\n"
+    "            c=word[i]\n"
+    "            if c=='.':\n"
+    "                return any(dfs(node[k],i+1) for k in node if k!='$')\n"
+    "            return c in node and dfs(node[c],i+1)\n"
+    "        return dfs(self.root,0)\n")
+
+add("Time Based Key-Value Store",
+    {"kind": "ops", "class_name": "TimeMap",
+     "tests": [{"ops": ["TimeMap","set","get","get","set","get","get"],
+                "args": [[], ["foo","bar",1], ["foo",1], ["foo",3], ["foo","bar2",4], ["foo",4], ["foo",5]],
+                "expected": [None,None,"bar","bar",None,"bar2","bar2"]}]},
+    "import bisect\n"
+    "class TimeMap:\n"
+    "    def __init__(self): self.d={}\n"
+    "    def set(self,key,value,timestamp):\n"
+    "        self.d.setdefault(key,[]).append((timestamp,value))\n"
+    "    def get(self,key,timestamp):\n"
+    "        a=self.d.get(key,[])\n"
+    "        i=bisect.bisect_right(a,(timestamp,chr(0x10FFFF)))\n"
+    "        return a[i-1][1] if i>0 else ''\n")
+
+add("LRU Cache",
+    {"kind": "ops", "class_name": "LRUCache",
+     "tests": [{"ops": ["LRUCache","put","put","get","put","get","put","get","get","get"],
+                "args": [[2], [1,1], [2,2], [1], [3,3], [2], [4,4], [1], [3], [4]],
+                "expected": [None,None,None,1,None,-1,None,-1,3,4]}]},
+    "class LRUCache:\n"
+    "    def __init__(self,capacity):\n"
+    "        self.cap=capacity; self.d={}\n"
+    "    def get(self,key):\n"
+    "        if key not in self.d: return -1\n"
+    "        v=self.d.pop(key); self.d[key]=v; return v\n"
+    "    def put(self,key,value):\n"
+    "        if key in self.d: self.d.pop(key)\n"
+    "        elif len(self.d)>=self.cap: self.d.pop(next(iter(self.d)))\n"
+    "        self.d[key]=value\n")
+
+add("Min Stack",
+    {"kind": "ops", "class_name": "MinStack",
+     "tests": [{"ops": ["MinStack","push","push","push","getMin","pop","top","getMin"],
+                "args": [[], [-2], [0], [-3], [], [], [], []],
+                "expected": [None,None,None,None,-3,None,0,-2]}]},
+    "class MinStack:\n"
+    "    def __init__(self): self.st=[]\n"
+    "    def push(self,val):\n"
+    "        m=val if not self.st else min(val,self.st[-1][1])\n"
+    "        self.st.append((val,m))\n"
+    "    def pop(self): self.st.pop()\n"
+    "    def top(self): return self.st[-1][0]\n"
+    "    def getMin(self): return self.st[-1][1]\n")
+
+add("Design Circular Queue",
+    {"kind": "ops", "class_name": "MyCircularQueue",
+     "tests": [{"ops": ["MyCircularQueue","enQueue","enQueue","enQueue","enQueue","Rear","isFull","deQueue","enQueue","Rear"],
+                "args": [[3], [1], [2], [3], [4], [], [], [], [4], []],
+                "expected": [None,True,True,True,False,3,True,True,True,4]}]},
+    "class MyCircularQueue:\n"
+    "    def __init__(self,k):\n"
+    "        self.q=[]; self.cap=k\n"
+    "    def enQueue(self,value):\n"
+    "        if len(self.q)>=self.cap: return False\n"
+    "        self.q.append(value); return True\n"
+    "    def deQueue(self):\n"
+    "        if not self.q: return False\n"
+    "        self.q.pop(0); return True\n"
+    "    def Front(self): return self.q[0] if self.q else -1\n"
+    "    def Rear(self): return self.q[-1] if self.q else -1\n"
+    "    def isEmpty(self): return len(self.q)==0\n"
+    "    def isFull(self): return len(self.q)==self.cap\n")
+
+add("Design Twitter",
+    {"kind": "ops", "class_name": "Twitter",
+     "tests": [{"ops": ["Twitter","postTweet","getNewsFeed","follow","postTweet","getNewsFeed","unfollow","getNewsFeed"],
+                "args": [[], [1,5], [1], [1,2], [2,6], [1], [1,2], [1]],
+                "expected": [None,None,[5],None,None,[6,5],None,[5]]}]},
+    "from collections import defaultdict\n"
+    "class Twitter:\n"
+    "    def __init__(self):\n"
+    "        self.time=0; self.tweets=defaultdict(list); self.follows=defaultdict(set)\n"
+    "    def postTweet(self,userId,tweetId):\n"
+    "        self.tweets[userId].append((self.time,tweetId)); self.time+=1\n"
+    "    def getNewsFeed(self,userId):\n"
+    "        feed=list(self.tweets[userId])\n"
+    "        for u in self.follows[userId]: feed+=self.tweets[u]\n"
+    "        feed.sort(key=lambda x:-x[0])\n"
+    "        return [t for _,t in feed[:10]]\n"
+    "    def follow(self,followerId,followeeId):\n"
+    "        if followerId!=followeeId: self.follows[followerId].add(followeeId)\n"
+    "    def unfollow(self,followerId,followeeId):\n"
+    "        self.follows[followerId].discard(followeeId)\n")
+
+add("Insert Delete GetRandom O(1)",
+    {"kind": "ops", "class_name": "RandomizedSet",
+     "tests": [{"ops": ["RandomizedSet","insert","remove","insert","getRandom","remove","insert","getRandom"],
+                "args": [[], [1], [2], [2], [], [1], [2], []],
+                "expected": [None,True,False,True,1,True,False,2]}]},
+    "import random\n"
+    "class RandomizedSet:\n"
+    "    def __init__(self): self.d={}; self.a=[]\n"
+    "    def insert(self,val):\n"
+    "        if val in self.d: return False\n"
+    "        self.d[val]=len(self.a); self.a.append(val); return True\n"
+    "    def remove(self,val):\n"
+    "        if val not in self.d: return False\n"
+    "        i=self.d[val]; last=self.a[-1]\n"
+    "        self.a[i]=last; self.d[last]=i\n"
+    "        self.a.pop(); del self.d[val]; return True\n"
+    "    def getRandom(self): return random.choice(self.a)\n")
+
+add("Shuffle an Array",
+    {"kind": "shuffle", "tests": [{"nums": [1,2,3]},{"nums": [5,5,5,1]},{"nums": [7]}]},
+    "import random\n"
+    "class Solution:\n"
+    "    def __init__(self,nums): self.orig=nums[:]; self.a=nums\n"
+    "    def reset(self): self.a=self.orig[:]; return self.a\n"
+    "    def shuffle(self):\n"
+    "        random.shuffle(self.a); return self.a\n")
+
+add("Random Pick with Weight",
+    {"kind": "random_pick", "tests": [{"w": [1,3]},{"w": [1,1,1,1]},{"w": [5]}]},
+    "import random, bisect\n"
+    "class Solution:\n"
+    "    def __init__(self,w):\n"
+    "        self.pre=[]; s=0\n"
+    "        for x in w: s+=x; self.pre.append(s)\n"
+    "        self.total=s\n"
+    "    def pickIndex(self):\n"
+    "        t=random.randint(1,self.total)\n"
+    "        return bisect.bisect_left(self.pre,t)\n")
+
+print(len(TESTS))
+
+# ---- run every task through the real Pyodide-bound harness (runner2.run_tests) ----
+bad = []
+for title, sp in TESTS.items():
+    code = SOL[title]
+    try:
+        raw = R.run_tests(code, json.dumps(sp))
+    except Exception as e:
+        bad.append((title, "EXCEPTION", repr(e))); continue
+    out = json.loads(raw)
+    if out["fatal"]:
+        bad.append((title, "FATAL", out["fatal"])); continue
+    for r in out["res"]:
+        if not r["ok"]:
+            bad.append((title, r.get("i"), r.get("error"), r.get("got"), r.get("expected")))
+
+print("problems:", len(bad))
+for b in bad:
+    print(b)
+
+json.dump({"tests": TESTS, "sol": SOL}, open("new_tests2.json","w"), ensure_ascii=False, indent=1)

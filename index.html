@@ -90,6 +90,14 @@ pre.code{padding:11px 12px;overflow:auto;margin:6px 0;border:1px solid var(--bd)
 .timer .tm{font-variant-numeric:tabular-nums;font-size:15px;font-weight:700;min-width:64px;text-align:center;padding:5px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--panel2)}
 .timer .tm.run{border-color:var(--acc);color:var(--acc)}.timer .tm.done{border-color:var(--bad);color:var(--bad)}
 .timer input#tmin{width:52px;text-align:center}
+.tree-wrap{display:flex;flex-wrap:wrap;gap:14px;margin:6px 0 4px}
+.tree-ex{border:1px solid var(--bd);border-radius:var(--rs);padding:8px 10px;background:rgba(255,255,255,.02)}
+.tree-cap{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.tree-ex svg{display:block;max-width:100%;height:auto}
+.tn-edge{stroke:var(--bd2);stroke-width:1.5}
+.tn-circle{fill:var(--panel2);stroke:var(--acc2);stroke-width:1.5}
+.tn-text{fill:var(--text);font:600 12px ui-monospace,Menlo,Consolas,monospace;text-anchor:middle;dominant-baseline:central}
+
 @media(max-width:900px){.timer{margin-left:0;width:100%;order:9}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.32.9/src-min-noconflict/ace.js"></script>
@@ -660,11 +668,71 @@ function tmSetup(){
  $('treset').onclick=tmReset;
 }
 /* ---------- task page ---------- */
+function buildTreeNodes(arr){
+ if(!arr||!arr.length||arr[0]===null||arr[0]===undefined)return null;
+ let i=0;
+ const root={val:arr[i++],left:null,right:null};
+ const queue=[root];
+ while(queue.length&&i<arr.length){
+  const node=queue.shift();
+  if(i<arr.length){const lv=arr[i++];if(lv!==null&&lv!==undefined){node.left={val:lv,left:null,right:null};queue.push(node.left)}}
+  if(i<arr.length){const rv=arr[i++];if(rv!==null&&rv!==undefined){node.right={val:rv,left:null,right:null};queue.push(node.right)}}
+ }
+ return root;
+}
+function layoutTree(root){
+ let x=0;const nodes=[];
+ (function dfs(n,depth){
+  if(!n)return;
+  dfs(n.left,depth+1);
+  n.x=x++;n.y=depth;nodes.push(n);
+  dfs(n.right,depth+1);
+ })(root,0);
+ return nodes;
+}
+function renderTreeSVG(arr,label){
+ const root=buildTreeNodes(arr);
+ if(!root)return `<div class="tree-ex"><div class="tree-cap">${esc(label)}</div><div class="muted" style="padding:6px 2px;font-size:13px">пустое дерево</div></div>`;
+ const nodes=layoutTree(root),dx=50,dy=54,mg=24;
+ const maxX=Math.max(...nodes.map(n=>n.x)),maxY=Math.max(...nodes.map(n=>n.y));
+ const W=(maxX+1)*dx+mg*2,H=(maxY+1)*dy+mg*2;
+ const px=n=>mg+n.x*dx+dx/2, py=n=>mg+n.y*dy+dy/2;
+ let edges='',circles='';
+ nodes.forEach(n=>{
+  if(n.left)edges+=`<line class="tn-edge" x1="${px(n)}" y1="${py(n)}" x2="${px(n.left)}" y2="${py(n.left)}"/>`;
+  if(n.right)edges+=`<line class="tn-edge" x1="${px(n)}" y1="${py(n)}" x2="${px(n.right)}" y2="${py(n.right)}"/>`;
+ });
+ nodes.forEach(n=>{
+  circles+=`<circle class="tn-circle" cx="${px(n)}" cy="${py(n)}" r="15"/><text class="tn-text" x="${px(n)}" y="${py(n)}">${esc(n.val)}</text>`;
+ });
+ return `<div class="tree-ex"><div class="tree-cap">${esc(label)}</div><svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">${edges}${circles}</svg></div>`;
+}
+function treeExamplesHTML(t){
+ const spec=TESTS[t.title];
+ if(!spec)return '';
+ const arrs=[];
+ if(spec.kind==='serde'){
+  const arr=(spec.tests||[])[0];
+  if(arr)arrs.push({label:'Дерево',arr});
+ }else if((spec.kind||'solve')==='solve'){
+  const at=spec.arg_types||[];
+  const idx=at.map((k,i)=>k==='tree'?i:-1).filter(i=>i>=0);
+  const row=(spec.tests||[])[0];
+  if(idx.length&&row){
+   idx.forEach((j,k)=>arrs.push({label:idx.length>1?`Дерево ${k+1}`:'Дерево',arr:row[j]}));
+  }else if(spec.ret_type==='tree'&&row){
+   arrs.push({label:'Результат (дерево)',arr:row[row.length-1]});
+  }
+ }
+ if(!arrs.length)return '';
+ return `<h3>Дерево из примера</h3><div class="tree-wrap">${arrs.map(o=>renderTreeSVG(o.arr,o.label)).join('')}</div>`;
+}
 function renderTask(){
  const t=cur,p=P[t.id]||{},i=flat.findIndex(x=>x.id===t.id);
  $('thead').innerHTML=`<h2>${esc(t.title)}</h2><span class="b ${t.difficulty}">${t.difficulty}</span>${t.yandex_rank?`<span class="tag y">Yandex #${t.yandex_rank}</span>`:t.source==='Yandex'?'<span class="tag y">★ контест Яндекса</span>':''}<span class="tag">${esc(t.topic)}</span>${t.auto_tests?'<span class="tag ok">⚡ автотесты</span>':''}`;
  $('sel').value=stOf(t);$('pos').textContent=i>=0?`${i+1} / ${flat.length}`:'';
  $('tinfo').innerHTML=`<h3>Условие</h3><div class="desc">${t.description?md(t.description):'<p class="muted">Описание пока не добавлено. Полное условие — по ссылке на оригинал.</p>'}</div>
+ ${treeExamplesHTML(t)}
  ${t.contract?`<h3>Контракт</h3><pre class="code">${esc(t.contract)}</pre><div class="sub">Реализуйте функцию <code>solve(...)</code>.</div>`:''}
  <div class="bar">${t.url?`<a class="btn" href="${esc(t.url)}" target="_blank" rel="noopener">Открыть оригинал ↗</a>`:''}</div>
  <div class="sub">Попыток: ${p.attempts||0} · успешных прогонов: ${p.passed||0}</div>`;

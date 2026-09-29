@@ -86,6 +86,11 @@ pre.code{padding:11px 12px;overflow:auto;margin:6px 0;border:1px solid var(--bd)
 .r.wn{background:rgba(245,185,66,.08);border-color:rgba(245,185,66,.25);color:var(--warn)}
 .r.in{background:rgba(255,255,255,.03);color:var(--muted)}
 @media(max-width:900px){.split{grid-template-columns:1fr;padding:12px}#tinfo{position:static;max-height:none}.dist{grid-template-columns:1fr}.wrap{padding:20px 16px 48px}.top,.tbar{padding:10px 16px}.tbar{top:45px}.row{padding-left:32px}}
+.timer{display:flex;align-items:center;gap:6px;margin-left:auto}
+.timer .tm{font-variant-numeric:tabular-nums;font-size:15px;font-weight:700;min-width:64px;text-align:center;padding:5px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--panel2)}
+.timer .tm.run{border-color:var(--acc);color:var(--acc)}.timer .tm.done{border-color:var(--bad);color:var(--bad)}
+.timer input#tmin{width:52px;text-align:center}
+@media(max-width:900px){.timer{margin-left:0;width:100%;order:9}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.32.9/src-min-noconflict/ace.js"></script>
 </head>
@@ -126,6 +131,12 @@ pre.code{padding:11px 12px;overflow:auto;margin:6px 0;border:1px solid var(--bd)
 <button data-a="back">← К списку</button><button data-a="prev">‹</button><span class="sub" id="pos"></span><button data-a="next">›</button><button data-a="rnd" title="Случайная нерешённая">🎲</button>
 <div id="thead"></div>
 <select id="sel"></select>
+<div class="timer" id="timer">
+<select id="tmode"><option value="up">Секундомер</option><option value="down">Обратный отсчёт</option></select>
+<input type="number" id="tmin" min="1" max="180" value="20" title="Минут" hidden>
+<span class="tm" id="tval">00:00</span>
+<button id="tstart">▶</button><button id="treset">⟲</button>
+</div>
 </div>
 <div class="split">
 <div class="panel" id="tinfo"></div>
@@ -145,41 +156,367 @@ pre.code{padding:11px 12px;overflow:auto;margin:6px 0;border:1px solid var(--bd)
 </section>
 
 <script>
-const RUNNER_PY=String.raw`import json, sys, io, traceback
+const RUNNER_PY=String.raw`import json, sys, io, traceback, random
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+def _list_build(arr):
+    dummy = ListNode(0)
+    cur = dummy
+    for v in arr:
+        cur.next = ListNode(v)
+        cur = cur.next
+    return dummy.next
+
+def _list_dump(node):
+    res = []
+    seen = set()
+    while node is not None and id(node) not in seen:
+        seen.add(id(node))
+        res.append(node.val)
+        node = node.next
+    return res
+
+def _tree_build(arr):
+    if not arr:
+        return None
+    it = iter(arr)
+    root_val = next(it)
+    if root_val is None:
+        return None
+    root = TreeNode(root_val)
+    queue = [root]
+    while queue:
+        node = queue.pop(0)
+        try:
+            lv = next(it)
+        except StopIteration:
+            break
+        if lv is not None:
+            node.left = TreeNode(lv)
+            queue.append(node.left)
+        try:
+            rv = next(it)
+        except StopIteration:
+            break
+        if rv is not None:
+            node.right = TreeNode(rv)
+            queue.append(node.right)
+    return root
+
+def _tree_dump(root):
+    if root is None:
+        return []
+    res = []
+    queue = [root]
+    while queue:
+        node = queue.pop(0)
+        if node is None:
+            res.append(None)
+            continue
+        res.append(node.val)
+        queue.append(node.left)
+        queue.append(node.right)
+    while res and res[-1] is None:
+        res.pop()
+    return res
+
+def _canon_tree_arr(arr):
+    return _tree_dump(_tree_build(arr))
+
+def _conv_in(v, kind):
+    if kind == "list":
+        return _list_build(v)
+    if kind == "tree":
+        return _tree_build(v)
+    if kind == "lists":
+        return [_list_build(x) for x in v]
+    return v
+
+def _conv_out(v, kind):
+    if kind == "list":
+        return _list_dump(v)
+    if kind == "tree":
+        return _tree_dump(v)
+    if kind == "lists":
+        return [_list_dump(x) for x in v]
+    return v
 
 def canon(v):
     if isinstance(v, list):
         return sorted((canon(x) for x in v), key=lambda x: json.dumps(x, sort_keys=True, default=str))
     return v
 
-def run_tests(code, tests_json, unordered=False):
+def _eq(got, exp, ret_type, unordered):
+    if ret_type == "tree":
+        return _tree_dump(got) == _canon_tree_arr(exp) if got is not None or exp else (got is None and not exp)
+    if ret_type == "list":
+        got = _list_dump(got)
+    if ret_type == "lists":
+        got = _conv_out(got, "lists")
+    g = got
+    try:
+        g = json.loads(json.dumps(g))
+    except Exception:
+        pass
+    return (canon(g) == canon(exp)) if unordered else (g == exp)
+
+
+def _run_solve(ns, spec):
+    solve = ns.get("solve")
+    if solve is None:
+        return None, "Не найдена функция solve(...)"
+    arg_types = spec.get("arg_types") or []
+    ret_type = spec.get("ret_type") or "raw"
+    unordered = bool(spec.get("unordered"))
+    results = []
+    for i, item in enumerate(spec["tests"], 1):
+        args, exp = item[:-1], item[-1]
+        r = {"i": i, "args": json.dumps(args, ensure_ascii=False, default=str)[1:-1],
+             "expected": json.dumps(exp, ensure_ascii=False, default=str)}
+        try:
+            call_args = [_conv_in(a, arg_types[j] if j < len(arg_types) else "raw") for j, a in enumerate(args)]
+            got = solve(*call_args)
+            ok = _eq(got, exp, ret_type, unordered)
+            shown = _conv_out(got, ret_type) if ret_type in ("list", "tree") else got
+            try:
+                shown = json.loads(json.dumps(shown, default=str))
+            except Exception:
+                pass
+            r["ok"] = ok
+            r["got"] = json.dumps(shown, ensure_ascii=False, default=str)
+        except Exception as e:
+            r["ok"] = False
+            r["error"] = repr(e)
+        results.append(r)
+    return results, None
+
+
+def _run_cycle(ns, spec):
+    solve = ns.get("solve")
+    if solve is None:
+        return None, "Не найдена функция solve(...)"
+    results = []
+    for i, item in enumerate(spec["tests"], 1):
+        values, pos, exp = item
+        r = {"i": i, "args": f"values={values!r}, pos={pos!r}", "expected": json.dumps(exp)}
+        try:
+            head = _list_build(values)
+            if pos is not None and pos >= 0 and head is not None:
+                nodes = []
+                n = head
+                while n is not None:
+                    nodes.append(n)
+                    n = n.next
+                nodes[-1].next = nodes[pos]
+            got = bool(solve(head))
+            r["ok"] = (got == exp)
+            r["got"] = json.dumps(got)
+        except Exception as e:
+            r["ok"] = False
+            r["error"] = repr(e)
+        results.append(r)
+    return results, None
+
+
+def _run_ops(ns, spec):
+    cls = ns.get(spec["class_name"])
+    if cls is None:
+        return None, f"Не найден класс {spec['class_name']}"
+    results = []
+    for i, case in enumerate(spec["tests"], 1):
+        ops, args, exp = case["ops"], case["args"], case["expected"]
+        r = {"i": i, "args": f"{ops}", "expected": json.dumps(exp, ensure_ascii=False)}
+        try:
+            obj = cls(*args[0])
+            out = [None]
+            for op, a in zip(ops[1:], args[1:]):
+                out.append(getattr(obj, op)(*a))
+            ok = True
+            shown = []
+            for got, want in zip(out, exp):
+                shown.append(got)
+                if want is None:
+                    continue
+                g = got
+                try:
+                    g = json.loads(json.dumps(g))
+                except Exception:
+                    pass
+                if canon(g) != canon(want) if isinstance(want, list) else g != want:
+                    ok = False
+            r["ok"] = ok
+            r["got"] = json.dumps(shown, ensure_ascii=False, default=str)
+        except Exception as e:
+            r["ok"] = False
+            r["error"] = repr(e)
+        results.append(r)
+    return results, None
+
+
+def _run_shuffle(ns, spec):
+    cls = ns.get("Solution")
+    if cls is None:
+        return None, "Не найден класс Solution"
+    results = []
+    for i, case in enumerate(spec["tests"], 1):
+        nums = case["nums"]
+        r = {"i": i, "args": f"nums={nums!r}", "expected": "reset() == исходный массив; shuffle() — перестановка того же массива"}
+        try:
+            obj = cls(nums[:])
+            ok = True
+            for _ in range(5):
+                sh = obj.shuffle()
+                if sorted(sh) != sorted(nums):
+                    ok = False
+            back = obj.reset()
+            if back != nums:
+                ok = False
+            r["ok"] = ok
+            r["got"] = "перестановки корректны" if ok else "shuffle()/reset() вернули не те элементы"
+        except Exception as e:
+            r["ok"] = False
+            r["error"] = repr(e)
+        results.append(r)
+    return results, None
+
+
+def _run_random_pick(ns, spec):
+    cls = ns.get("Solution")
+    if cls is None:
+        return None, "Не найден класс Solution"
+    results = []
+    for i, case in enumerate(spec["tests"], 1):
+        w = case["w"]
+        r = {"i": i, "args": f"w={w!r}", "expected": "частоты индексов пропорциональны весам"}
+        try:
+            obj = cls(w[:])
+            n = 4000
+            counts = [0] * len(w)
+            for _ in range(n):
+                idx = obj.pickIndex()
+                if idx < 0 or idx >= len(w):
+                    r["ok"] = False
+                    r["error"] = f"pickIndex() вернул недопустимый индекс {idx}"
+                    break
+                counts[idx] += 1
+            else:
+                total = sum(w)
+                ok = True
+                for c, ww in zip(counts, w):
+                    if abs(c / n - ww / total) > 0.08:
+                        ok = False
+                r["ok"] = ok
+                r["got"] = f"частоты: {counts}"
+        except Exception as e:
+            r["ok"] = False
+            r["error"] = repr(e)
+        results.append(r)
+    return results, None
+
+def _run_serde(ns, spec):
+    ser, de = ns.get("serialize"), ns.get("deserialize")
+    if ser is None or de is None:
+        return None, "Не найдены функции serialize(root) и deserialize(data)"
+    results = []
+    for i, arr in enumerate(spec["tests"], 1):
+        r = {"i": i, "args": f"tree={arr!r}", "expected": "дерево после serialize -> deserialize совпадает с исходным"}
+        try:
+            root = _tree_build(arr)
+            data = ser(root)
+            root2 = de(data)
+            got = _tree_dump(root2)
+            r["ok"] = (got == _canon_tree_arr(arr))
+            r["got"] = json.dumps(got)
+        except Exception as e:
+            r["ok"] = False
+            r["error"] = repr(e)
+        results.append(r)
+    return results, None
+
+
+class Node:
+    def __init__(self, val=0, neighbors=None):
+        self.val = val
+        self.neighbors = neighbors if neighbors is not None else []
+
+
+def _graph_build(adj):
+    nodes = {i + 1: Node(i + 1) for i in range(len(adj))}
+    for i, nbrs in enumerate(adj, 1):
+        nodes[i].neighbors = [nodes[j] for j in nbrs]
+    return nodes.get(1)
+
+
+def _graph_dump(node):
+    if node is None:
+        return {}, set()
+    seen = {}
+    ids = set()
+
+    def dfs(n):
+        if n.val in seen:
+            return
+        ids.add(id(n))
+        seen[n.val] = sorted(nb.val for nb in n.neighbors)
+        for nb in n.neighbors:
+            dfs(nb)
+    dfs(node)
+    return seen, ids
+
+
+def _run_clone_graph(ns, spec):
+    solve = ns.get("solve")
+    if solve is None:
+        return None, "Не найдена функция solve(...)"
+    results = []
+    for i, adj in enumerate(spec["tests"], 1):
+        r = {"i": i, "args": f"adjList={adj!r}", "expected": "клон с той же структурой, но другими объектами узлов"}
+        try:
+            orig = _graph_build(adj)
+            orig_map, orig_ids = _graph_dump(orig)
+            clone = solve(orig)
+            clone_map, clone_ids = _graph_dump(clone)
+            same_structure = (orig_map == clone_map)
+            real_copy = not (orig_ids & clone_ids) if adj else True
+            r["ok"] = same_structure and real_copy
+            r["got"] = "структура совпадает, узлы скопированы" if r["ok"] else ("структура отличается" if not same_structure else "возвращены те же объекты узлов, а не копии")
+        except Exception as e:
+            r["ok"] = False
+            r["error"] = repr(e)
+        results.append(r)
+    return results, None
+
+_RUNNERS = {
+    "solve": _run_solve, "cycle": _run_cycle, "ops": _run_ops,
+    "shuffle": _run_shuffle, "random_pick": _run_random_pick,
+    "serde": _run_serde, "clone_graph": _run_clone_graph,
+}
+
+def run_tests(code, spec_json):
+    spec = json.loads(spec_json)
     buf, old = io.StringIO(), sys.stdout
     sys.stdout = buf
     out = {"res": [], "fatal": ""}
     try:
-        ns = {"__name__": "solution"}
-        exec("from typing import *\n", ns)
+        ns = {"__name__": "solution", "ListNode": ListNode, "TreeNode": TreeNode, "Node": Node}
+        exec("from typing import *\nimport heapq, collections, bisect, math, random\nfrom collections import defaultdict, Counter, deque\n", ns)
         exec(compile(code, "solution.py", "exec"), ns)
-        solve = ns.get("solve")
-        if solve is None:
-            out["fatal"] = "Не найдена функция solve(...)"
+        runner = _RUNNERS.get(spec.get("kind", "solve"), _run_solve)
+        results, fatal = runner(ns, spec)
+        if fatal:
+            out["fatal"] = fatal
         else:
-            for i, item in enumerate(json.loads(tests_json), 1):
-                args, exp = item[:-1], item[-1]
-                r = {"i": i, "args": json.dumps(args, ensure_ascii=False, default=str)[1:-1],
-                     "expected": json.dumps(exp, ensure_ascii=False, default=str)}
-                try:
-                    got = solve(*args)
-                    try:
-                        g2 = json.loads(json.dumps(got))
-                    except Exception:
-                        g2 = got
-                    r["ok"] = (canon(g2) == canon(exp)) if unordered else (g2 == exp)
-                    r["got"] = json.dumps(g2, ensure_ascii=False, default=str)
-                except Exception as e:
-                    r["ok"] = False
-                    r["error"] = repr(e)
-                out["res"].append(r)
+            out["res"] = results
     except BaseException as e:
         tb = e.__traceback__.tb_next if e.__traceback__ else None
         out["fatal"] = "".join(traceback.format_exception(type(e), e, tb))
@@ -208,7 +545,7 @@ function workerMain(){
     py.runPython(d.init);postMessage({ready:1});
    }catch(err){postMessage({initError:String(err)})}
   }else if(d.run){
-   try{postMessage({id:d.id,out:py.globals.get('run_tests')(d.run.code,d.run.tests,d.run.unordered)})}
+   try{postMessage({id:d.id,out:py.globals.get('run_tests')(d.run.code,d.run.spec)})}
    catch(err){postMessage({id:d.id,err:String(err)})}
   }
  };
@@ -220,13 +557,13 @@ function spawn(){
  ready.catch(()=>{});
  W.postMessage({init:RUNNER_PY});
 }
-function exec(code,tests,unordered){
+function exec(code,specJson){
  return new Promise(async(resolve,reject)=>{
   try{await ready}catch(e){reject(e);return}
   const id=++seq,w=W;
   const tm=setTimeout(()=>{w.terminate();spawn();resolve({timeout:1})},4000);
   w.onmessage=e=>{if(e.data.id===id){clearTimeout(tm);resolve(e.data)}};
-  w.postMessage({id,run:{code,tests:JSON.stringify(tests),unordered:!!unordered}});
+  w.postMessage({id,run:{code,spec:specJson}});
  });
 }
 
@@ -241,7 +578,7 @@ function upd(id,patch){
  if(ch)$('v-task').hidden?renderAll():renderTask();
 }
 function flush(){if(pend){clearTimeout(pend.tm);const p=P[pend.id]||{};upd(pend.id,{code:pend.code,status:(p.status||'new')==='new'?'in_progress':p.status});pend=null}}
-const starter=t=>{const c=(t.contract||(TESTS[t.title]||{}).contract||'').trim();const h=/^def /.test(c)?c.replace(/:\s*$/,''):/^solve\(/.test(c)?'def '+c:'def solve(*args)';return h+':\n    pass\n'};
+const starter=t=>{const spec=TESTS[t.title]||{};if(spec.template)return spec.template;const c=(t.contract||spec.contract||'').trim();if(/^class\s/.test(c))return c.endsWith('\n')?c:c+'\n';const h=/^def /.test(c)?c.replace(/:\s*$/,''):/^solve\(/.test(c)?'def '+c:'def solve(*args)';return h+':\n    pass\n'};
 function md(s){
  return String(s).split('```').map((p,i)=>i%2?`<pre class="code">${esc(p.replace(/^[\w+-]*\n/,''))}</pre>`:
   esc(p).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').split(/\n{2,}/).filter(b=>b.trim()).map(b=>`<p>${b.replace(/\n/g,'<br>')}</p>`).join('')).join('');
@@ -292,6 +629,36 @@ function renderAll(){
  $('cnt').textContent=`Показано ${flat.length} из ${N}`;
 }
 
+
+/* ---------- timer ---------- */
+let TM={mode:'up',running:false,secs:0,limit:20*60,iv:null};
+function tmFmt(s){s=Math.max(0,Math.round(s));const m=Math.floor(s/60),r=s%60;return String(m).padStart(2,'0')+':'+String(r).padStart(2,'0')}
+function tmRender(){
+ const el=$('tval');
+ el.textContent=tmFmt(TM.mode==='up'?TM.secs:TM.limit-TM.secs);
+ el.classList.toggle('run',TM.running);
+ el.classList.toggle('done',TM.mode==='down'&&TM.secs>=TM.limit);
+ $('tstart').textContent=TM.running?'⏸':'▶';
+}
+function tmTick(){
+ TM.secs++;
+ if(TM.mode==='down'&&TM.secs>=TM.limit){TM.secs=TM.limit;tmStop();}
+ tmRender();
+}
+function tmStop(){TM.running=false;if(TM.iv){clearInterval(TM.iv);TM.iv=null}tmRender()}
+function tmStart(){if(TM.running)return;if(TM.mode==='down'&&TM.secs>=TM.limit)TM.secs=0;TM.running=true;TM.iv=setInterval(tmTick,1000);tmRender()}
+function tmReset(){tmStop();TM.secs=0;tmRender()}
+function tmSetup(){
+ const saved=(()=>{try{return JSON.parse(LS.get('yit-timer')||'{}')}catch(e){return{}}})();
+ TM.mode=saved.mode==='down'?'down':'up';
+ TM.limit=Math.max(60,(saved.min||20)*60);
+ $('tmode').value=TM.mode;$('tmin').hidden=TM.mode!=='down';$('tmin').value=Math.round(TM.limit/60);
+ tmReset();
+ $('tmode').onchange=e=>{tmStop();TM.mode=e.target.value;TM.secs=0;$('tmin').hidden=TM.mode!=='down';LS.set('yit-timer',JSON.stringify({mode:TM.mode,min:Math.round(TM.limit/60)}));tmRender()};
+ $('tmin').oninput=e=>{const v=Math.min(180,Math.max(1,+e.target.value||20));TM.limit=v*60;LS.set('yit-timer',JSON.stringify({mode:TM.mode,min:v}));tmRender()};
+ $('tstart').onclick=()=>TM.running?tmStop():tmStart();
+ $('treset').onclick=tmReset;
+}
 /* ---------- task page ---------- */
 function renderTask(){
  const t=cur,p=P[t.id]||{},i=flat.findIndex(x=>x.id===t.id);
@@ -322,7 +689,7 @@ async function run(){
  if(!t.auto_tests||!spec){box('<div class="r wn">Для этой задачи автотесты пока не заведены. Используйте оригинальный judge или добавьте тесты в tests.json.</div>');return}
  $('run').disabled=true;box('<div class="r in">Выполняется…</div>');
  try{
-  const r=await exec(code,spec.tests,spec.unordered);
+  const r=await exec(code,JSON.stringify(spec));
   if(r.timeout){box('<div class="r no">Превышен лимит 4 секунды.</div>');return}
   if(r.err){box(`<div class="r no">${esc(r.err)}</div>`);return}
   const o=JSON.parse(r.out);let h='';
@@ -351,8 +718,8 @@ function route(){
  if(t){
   cur=t;LS.set('yit-cur',t.id);flat=view();
   $('v-list').hidden=true;$('v-task').hidden=false;
-  renderTask();loadCode();$('res').innerHTML='';ed.resize(true);window.scrollTo(0,0);
- }else{$('v-task').hidden=true;$('v-list').hidden=false;renderAll()}
+  renderTask();loadCode();$('res').innerHTML='';ed.resize(true);window.scrollTo(0,0);tmReset();
+ }else{tmStop();$('v-task').hidden=true;$('v-list').hidden=false;renderAll()}
 }
 async function boot(){
  try{
@@ -362,6 +729,7 @@ async function boot(){
  try{P=JSON.parse(LS.get('yit-progress')||'{}')}catch(e){P={}}
  ed=ace.edit('editor',{mode:'ace/mode/python',theme:'ace/theme/tomorrow_night',tabSize:4,useSoftTabs:true,showPrintMargin:false,fontSize:15,wrap:true,enableBasicAutocompletion:false,enableLiveAutocompletion:false,enableSnippets:false,showGutter:true});
  ed.commands.addCommand({name:'run',bindKey:{win:'Ctrl-Enter',mac:'Command-Enter'},exec:run});
+ tmSetup();
  ed.session.on('change',()=>{
   if(loading)return;
   if(pend)clearTimeout(pend.tm);
